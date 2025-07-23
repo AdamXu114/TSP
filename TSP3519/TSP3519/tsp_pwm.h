@@ -17,6 +17,13 @@
 #define LEFT  0
 #define RIGHT 1
 
+#define CH1_LOWER_LIMIT	500U
+#define CH1_UPPER_LIMIT	1900U
+#define CH2_LOWER_LIMIT	500U
+#define CH2_UPPER_LIMIT	1900U
+
+#define MOTOR_DC_LIMIT	4000
+
 // PID参数变量声明
 extern float kp_motor;
 extern float ki_motor;
@@ -38,9 +45,9 @@ extern float target_speed;
 void pwm_init(void);
 void tsp_servo_angle(uint8_t channel, uint16_t pulse_width);
 void tsp_motor_voltage(uint8_t dir, uint16_t duty_cycle);
-void tsp_motor_stop(void);
-void tsp_motor_turn_inplace(uint8_t dir, uint16_t duty_cycle, uint16_t angle);
-void tsp_motor_speed_pid(uint16_t target_speed_pid, uint8_t motor);
-void tsp_line_follower(float err);
+// void tsp_motor_stop(void);
+// void tsp_motor_turn_inplace(uint8_t dir, uint16_t duty_cycle, uint16_t angle);
+// void tsp_motor_speed_pid(uint16_t target_speed_pid, uint8_t motor);
+// void tsp_line_follower(int8_t err);
 
 #endif // TSP_PWM_H
