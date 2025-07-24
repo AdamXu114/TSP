@@ -1135,7 +1135,7 @@
             <name>$PROJ_DIR$\README.md</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\TSP3519.c</name>
+            <name>$PROJ_DIR$\..\TSP3519.c</name>
         </file>
     </group>
     <group>
@@ -1148,6 +1148,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_liball.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_servo.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_servo.h</name>
         </file>
     </group>
     <group>
@@ -1164,6 +1170,12 @@
     </group>
     <group>
         <name>TSP3519</name>
+        <file>
+            <name>$PROJ_DIR$\..\TSP3519\tsp_adc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\TSP3519\tsp_adc.h</name>
+        </file>
         <file>
             <name>$PROJ_DIR$\..\TSP3519\tsp_common_headfile.h</name>
         </file>

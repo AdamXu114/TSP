@@ -3,6 +3,10 @@
 volatile uint32_t sys_tick_counter=0;
 volatile static uint32_t delay;
 extern uint8_t flag_20_ms;
+extern uint8_t rx_buffer[];
+extern uint16_t rx_idx;
+extern uint8_t rx_flag;
+extern uint32_t RES_value;
 void delay_1ms(uint32_t count)
 {
 	delay = count;
@@ -81,21 +85,57 @@ void UART3_IRQHandler (void)
 	DL_UART_clearInterruptStatus(UART3, UART3->CPU_INT.RIS);
 }
 */
+void UART6_IRQHandler (void)
+{
+	uint8_t data;
 
+	if(!DL_UART_isRXFIFOEmpty(K230_INST))
+	{
+		/* read one byte from the receive data register */
+		data = (uint8_t)DL_UART_Main_receiveData(K230_INST);
+        if(data == '\n' || data == '\r') {
+            // 处理换行符或回车符
+            if(rx_idx > 0) {
+                rx_buffer[rx_idx] = '\0'; // 结束字符串
+                rx_idx = 0; // 重置索引
+                rx_flag = 1; // 读到了一个完整的命令
+                
+            }
+        } else if(rx_idx < 255) {
+            // 确保不会溢出缓冲区
+            // 将数据存入缓冲区
+            rx_buffer[rx_idx++] = data;
+        }
+	}
+}
 
 void GROUP1_IRQHandler(void)
 {
-    uint32_t pending = DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1);
-    if (pending & PORTC_MPU6050_INT_PIN) {
-        // —— 你的业务处理 —— 
-		// 例如：读取 MPU6050 数据
-		short gyro[3];
-		MPU6050ReadGyro(gyro);
-		int16_t gz = gyro[2];
-		// tsp_tft18_show_int16(0, 6, gz);
-		tsp_tft18_show_str(0, 6, "Gyro Z:");
-        // 一定要清标志，否则会一直回到这里
-        DL_GPIO_clearInterruptStatus(PORTC_PORT, PORTC_MPU6050_INT_PIN);
-    }
-    // 如果 PC4、PC5、PC9 等也开了中断，可继续 if (pending & OTHER_PIN) …
+    switch( DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1))	{
+		case DL_INTERRUPT_GROUP1_IIDX_GPIOA:
+			if (DL_GPIO_getEnabledInterruptStatus(PORTA_PORT, PORTA_PHA0_PIN)) {
+				//PHA0中断
+				tsp_tft18_show_str(0, 6, "PHA0 Int");
+				if(PHA0()){      // rising edge on PHA0
+					if(!PHB0()) RES_value++;// low on PHB0 -> CW
+					else if(RES_value>0)RES_value--;// high on PHB0 -> CCW
+				}else{             // falling edge on PHA0
+					// if(PHB0())RES_value++;// high on PHB0 -> CW
+					// else if(RES_value>0)RES_value--; // low on PHB0 -> CCW
+				}
+				DL_GPIO_clearInterruptStatus(PORTA_PORT, PORTA_PHA0_PIN);
+			}break;
+
+		case DL_INTERRUPT_GROUP1_IIDX_GPIOB:
+			tsp_tft18_show_str(0, 6, "PHB0 Int");break;
+
+		case DL_INTERRUPT_GROUP1_IIDX_GPIOC:
+			tsp_tft18_show_str(0, 6, "PHC0 Int");break;
+
+		default:tsp_tft18_show_str(0, 6, "Interrupt Error");break;
+
+			
+	}
+	
+
 }

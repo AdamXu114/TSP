@@ -315,13 +315,6 @@ extern "C" {
 /* Defines for S1: GPIOC.0 with pinCMx 74 on package pin 56 */
 #define PORTC_S1_PIN                                             (DL_GPIO_PIN_0)
 #define PORTC_S1_IOMUX                                           (IOMUX_PINCM74)
-/* Defines for MPU6050_INT: GPIOC.8 with pinCMx 86 on package pin 80 */
-// pins affected by this interrupt request:["MPU6050_INT"]
-#define PORTC_INT_IRQN                                          (GPIOC_INT_IRQn)
-#define PORTC_INT_IIDX                          (DL_INTERRUPT_GROUP1_IIDX_GPIOC)
-#define PORTC_MPU6050_INT_IIDX                               (DL_GPIO_IIDX_DIO8)
-#define PORTC_MPU6050_INT_PIN                                    (DL_GPIO_PIN_8)
-#define PORTC_MPU6050_INT_IOMUX                                  (IOMUX_PINCM86)
 
 
 

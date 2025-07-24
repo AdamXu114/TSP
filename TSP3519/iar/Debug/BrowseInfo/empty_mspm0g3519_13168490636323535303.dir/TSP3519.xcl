@@ -1,4 +1,4 @@
-"D:\Study_resources\电赛\TSP\TSP3519\iar\TSP3519.c"
+"D:\Study_resources\电赛\TSP\TSP3519\TSP3519.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
@@ -9,7 +9,7 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_1316
 -o
 D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_13168490636323535303.dir\TSP3519.pbi
 -I
-D:\Study_resources\电赛\TSP\TSP3519\iar
+D:\Study_resources\电赛\TSP\TSP3519
 -I
 D:\Study_resources\电赛\TSP\TSP3519\iar
 -I

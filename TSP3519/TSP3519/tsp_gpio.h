@@ -2,6 +2,7 @@
 #define _TSP_GPIO_H
 
 #include "ti_msp_dl_config.h"
+#include "tsp_common_headfile.h"
 
 // GPIO inputs on system board
 // S0 - PA18/BSL  (rename S1 to S0)
