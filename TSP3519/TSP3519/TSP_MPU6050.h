@@ -28,8 +28,9 @@
 #define	MPU6050_PWR_MGMT_2		0x6C
 #define	MPU6050_WHO_AM_I		0x75
 
-
-
+#define RAD2DEG (180.0f / 3.1415926f)
+#define ACCSCALE 2048.0f // 加速度计满量程 ±2g
+#define GYROSCALE 16.4f // 陀螺仪满量程 ±250°/s
 
 int MPU6050_WriteReg(uint8_t reg_add, uint8_t reg_dat);
 uint8_t MPU6050_ReadReg(uint8_t RegAddress);
@@ -38,6 +39,9 @@ uint8_t MPU6050ReadID(void);
 void MPU6050_Init(void);
 void MPU6050ReadAcc(short *accData);
 void MPU6050ReadGyro(short *gyroData);
-
+void MPU6050GetRPY(float *Roll, float *Pitch, float *Yaw);
+void IMU_Update(float gx, float gy, float gz, 
+                float ax, float ay, float az);
+void gyro_bias_update(short *gyroData);
 
 #endif /* TSP_MPU6050_H */

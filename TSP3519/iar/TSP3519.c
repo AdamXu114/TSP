@@ -71,30 +71,8 @@ int main(void)
 	tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
     MPU6050_Init();
     
-	/* 初始化 yaw_ref */
-    float yaw = 0.0f, yaw_ref;
-    {
-        float tmp = 0.0f;
-        const int N0 = 5;
-        uint32_t start_time = get_systick_counter();
-        for (int i = 0; i < N0; i++) {
-            short gyro[3];
-            
-            MPU6050ReadGyro(gyro);
-            gz = gyro[2];
-            
-            uint32_t Current_time = get_systick_counter();
-            dt = Current_time - start_time;
-            tmp += (gz / 131.0f) /12.0f *90.0f* (float)dt ;
-            start_time = Current_time;
-            delay_1ms(3);
-        }
-        
-        yaw_ref = tmp / N0;
-    }
-    
 	while (1) {
-		
+		float rpy[3];
 		if(S0())
 			LED_ON();
 		else
@@ -108,25 +86,19 @@ int main(void)
 		float tmp = 0.0f;
         if(flag_20_ms) {
             flag_20_ms = 0; // 清除标志
-            for (int i = 0; i < 3; i++) {
-                short gyro[3];
-                short acc[3];
-                MPU6050ReadGyro(gyro);
-                MPU6050ReadAcc(acc);
-                gz = gyro[2];
-                tsp_tft18_show_int16(0, 6 , gz);
-                tmp += gz / 131.0f;
-            }
+            MPU6050GetRPY(&rpy[0], &rpy[1], &rpy[2]);
         }
         
-		char buf[32];
-        yaw += tmp / 3.0f * 0.02f /12.0f *90.0f  ;
-        //yaw = normalize_angle(yaw);
-	    // sprintf(buf, "Yaw:%6.1f", yaw);
-        // tsp_tft18_show_str(0, 3, buf);
-        // sprintf(buf, "Ref:%6.1f", yaw_ref);
-        // tsp_tft18_show_str(0, 4, buf);
-        tsp_tft18_show_uint16(0, 5, count++);
+		char buf[64];
+        sprintf(buf, "Roll: %.2f", rpy[0]);
+        tsp_tft18_show_str(0, 1, buf);
+        sprintf(buf, "Pitch: %.2f", rpy[1]);
+        tsp_tft18_show_str(0, 2, buf);
+        sprintf(buf, "Yaw: %.2f", rpy[2]);
+        tsp_tft18_show_str(0, 3, buf);
+
+
+        //tsp_tft18_show_uint16(0, 5, count++);
 	}	
 			  
 }

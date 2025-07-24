@@ -225,6 +225,29 @@ extern "C" {
 
 
 
+/* Defines for CCD */
+#define CCD_INST                                                            ADC1
+#define CCD_INST_IRQHandler                                      ADC1_IRQHandler
+#define CCD_INST_INT_IRQN                                        (ADC1_INT_IRQn)
+#define CCD_ADCMEM_CCD1_AO                                    DL_ADC12_MEM_IDX_2
+#define CCD_ADCMEM_CCD1_AO_REF              DL_ADC12_REFERENCE_VOLTAGE_VDDA_VSSA
+#define CCD_ADCMEM_CCD2_AO                                    DL_ADC12_MEM_IDX_3
+#define CCD_ADCMEM_CCD2_AO_REF              DL_ADC12_REFERENCE_VOLTAGE_VDDA_VSSA
+#define CCD_ADCMEM_CCD3_AO                                    DL_ADC12_MEM_IDX_4
+#define CCD_ADCMEM_CCD3_AO_REF              DL_ADC12_REFERENCE_VOLTAGE_VDDA_VSSA
+#define CCD_ADCMEM_CCD4_AO                                    DL_ADC12_MEM_IDX_6
+#define CCD_ADCMEM_CCD4_AO_REF              DL_ADC12_REFERENCE_VOLTAGE_VDDA_VSSA
+#define GPIO_CCD_C5_PORT                                                   GPIOB
+#define GPIO_CCD_C5_PIN                                           DL_GPIO_PIN_18
+#define GPIO_CCD_C6_PORT                                                   GPIOB
+#define GPIO_CCD_C6_PIN                                           DL_GPIO_PIN_19
+#define GPIO_CCD_C4_PORT                                                   GPIOB
+#define GPIO_CCD_C4_PIN                                           DL_GPIO_PIN_17
+#define GPIO_CCD_C2_PORT                                                   GPIOA
+#define GPIO_CCD_C2_PIN                                           DL_GPIO_PIN_17
+
+
+
 /* Port definition for Pin Group PORTB */
 #define PORTB_PORT                                                       (GPIOB)
 
@@ -315,6 +338,7 @@ void SYSCFG_DL_QEI_2_init(void);
 void SYSCFG_DL_MPU6050_init(void);
 void SYSCFG_DL_K230_init(void);
 void SYSCFG_DL_LCD_init(void);
+void SYSCFG_DL_CCD_init(void);
 
 void SYSCFG_DL_SYSTICK_init(void);
 
