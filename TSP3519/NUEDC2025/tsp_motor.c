@@ -25,8 +25,7 @@ void Motor_test(void){
         tsp_encoder_clear();
         // 这里可以添加更多的测试逻辑
         // 例如打印编码器值等
-        char buf[40];
-        sprintf(buf,"%d,  %d\n", value[0], value[1]);
-        tsp_tft18_show_str_color(0, 4, buf, BLUE, YELLOW);
+        tsp_tft18_show_uint16(0, 4, value[0]);
+        tsp_tft18_show_uint16(0, 5, value[1]);
     }
 }

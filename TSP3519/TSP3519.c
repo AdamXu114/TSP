@@ -68,12 +68,10 @@ int main(void)
 	//tsp_tft18_test_color();
 	tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
     //MPU6050_Init();
-    //CCD_test();
-	Motor_test();
+    CCD_test();
+	//Motor_test();
 	while (1) {
 		float rpy[3];
-		pha = PHA0();
-		phb = PHB0(); // 获取编码器值
 		if(S0())
 			LED_ON();
 		else

@@ -12,43 +12,54 @@ void tsp_ccd_delay(void)
 void tsp_ccd_init(void)
 {
     // 底层外设初始化（GPIO 时钟、多路复用、ADC）
-    SYSCFG_DL_init();  
+    //SYSCFG_DL_init();  
     ADC_Init();
 
     // 配置 SI、CLK 引脚为数字输出
-    DL_GPIO_initDigitalOutput(PORTC_CCD_SI1_IOMUX);
-    DL_GPIO_initDigitalOutput(PORTC_CCD_SI2_IOMUX);  // 若使用双 SI
-    DL_GPIO_initDigitalOutput(PORTB_CCD_CLK1_IOMUX);
-    DL_GPIO_initDigitalOutput(PORTC_CCD_CLK2_IOMUX); // 若使用双 TAP
+    // DL_GPIO_initDigitalOutput(PORTC_CCD_SI1_IOMUX);
+    // DL_GPIO_initDigitalOutput(PORTC_CCD_SI2_IOMUX);  // 若使用双 SI
+    // DL_GPIO_initDigitalOutput(PORTB_CCD_CLK1_IOMUX);
+    // DL_GPIO_initDigitalOutput(PORTC_CCD_CLK2_IOMUX); // 若使用双 TAP
 }
 
 /** 仅拉一次 SI 脉冲，复位电荷 */
 static void tsp_ccd_trigger_SI(void)
 {
     // SI = 1
-    DL_GPIO_setPins(PORTC_PORT, PORTC_CCD_SI1_PIN | PORTC_CCD_SI2_PIN);
+    CCD_SI1_HIGH;
+    CCD_SI2_HIGH;
     tsp_ccd_delay();
     // SI = 0
-    DL_GPIO_clearPins(PORTC_PORT, PORTC_CCD_SI1_PIN | PORTC_CCD_SI2_PIN);
+    CCD_SI1_LOW;
+    CCD_SI2_LOW;
 }
 
 /** 拉一次 CLK 脉冲，用于读出/迭代像素 */
 static void tsp_ccd_pulse_CLK(void)
 {
-    DL_GPIO_setPins(PORTB_PORT, PORTB_CCD_CLK1_PIN);
-    DL_GPIO_setPins(PORTC_PORT, PORTC_CCD_CLK2_PIN);
+    CCD_CLK1_HIGH;
+    CCD_CLK2_HIGH;
     tsp_ccd_delay();
-    DL_GPIO_clearPins(PORTB_PORT, PORTB_CCD_CLK1_PIN);
-    DL_GPIO_clearPins(PORTC_PORT, PORTC_CCD_CLK2_PIN);
+    CCD_CLK1_LOW;
+    CCD_CLK2_LOW;
     tsp_ccd_delay();
 }
 
 void tsp_ccd_flush(void)
 {
     // 1. 复位脉冲
-    tsp_ccd_trigger_SI();
-    // 2. 首个时钟：启动转移
-    tsp_ccd_pulse_CLK();
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH;
+    tsp_ccd_delay();
+    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay();
+    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay();
+    CCD_CLK1_LOW;CCD_CLK2_LOW; // 若使用双 TAP，则同时拉低 CLK2
+    tsp_ccd_delay();
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉高 CLK2
+    tsp_ccd_delay();
+    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉低 SI2
+    tsp_ccd_delay();
     // 3. 再来 128 个时钟，丢弃管脚上的电荷输出
     for (uint16_t i = 0; i < CCD_PIXEL_COUNT; i++) {
         tsp_ccd_pulse_CLK();
@@ -66,24 +77,30 @@ bool tsp_ccd_snapshot(ccd_t buf)
     delay_1ms(10);
 
     // 3) 触发 SI, CLK 初始脉冲，开始读第 0 像素
-    tsp_ccd_trigger_SI();
-    DL_GPIO_clearPins(PORTB_PORT, PORTB_CCD_CLK1_PIN);
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH;
+    tsp_ccd_delay();
+    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay();
+    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay();
+    CCD_CLK1_LOW;CCD_CLK2_LOW; // 若使用双 TAP，则同时拉低 CLK2
+    tsp_ccd_delay();
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉高 CLK2
+    tsp_ccd_delay();
+    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉低 SI2
     tsp_ccd_delay();
 
     // 4) 依次读出 CCD_PIXEL_COUNT 个像素
     for (uint16_t i = 0; i < CCD_PIXEL_COUNT; i++) {
-        // 上升沿出电荷
-        DL_GPIO_setPins(PORTB_PORT, PORTB_CCD_CLK1_PIN);
+        // 下降沿
+        CCD_CLK1_LOW;CCD_CLK2_LOW;
         tsp_ccd_delay();
-
         // 读 ADC
-        if (!ADC_ReadValue(DL_ADC12_MEM_IDX_2, &val)) {
-            return false;
-        }
+        CCD1_Get_AO(&val);
         buf[i] = val;
 
-        // 下降沿，为下一像素做准备
-        DL_GPIO_clearPins(PORTB_PORT, PORTB_CCD_CLK1_PIN);
+        // 上升沿出电荷,为下一像素做准备
+        CCD_CLK1_HIGH;CCD_CLK2_HIGH;
         tsp_ccd_delay();
     }
 
@@ -121,15 +138,16 @@ void tsp_demo_frame_ccd(void)
 void CCD_test(void)
 {
   	uint8_t index;
-	
+	uint16_t count = 0;
   	// initialize LCD
 	// hsp_spi_init();
 	// hsp_tft18_init();
 	tsp_tft18_clear(BLACK);
 	
 	// initialize ADC/CCD
-	// tsp_ccd_init();
+	tsp_ccd_init();
 	tsp_demo_frame_ccd();
+    NVIC_EnableIRQ(ADC1_INT_IRQn); // enable ADC interrupt
 
 	for(index=0; index<128; index++)
 		ccd_data_raw[index] = (index<<5);
@@ -140,6 +158,7 @@ void CCD_test(void)
 			tsp_ccd_show(ccd_data_raw);
         }
         delay_1ms(100);
+        tsp_tft18_show_uint16(80, 3, count++);
     }
 	
 }

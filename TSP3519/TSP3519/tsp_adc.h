@@ -5,7 +5,10 @@
 #include "tsp_gpio.h"
 
 void ADC_Init(void);
-int ADC_ReadValue(DL_ADC12_MEM_IDX channel,uint16_t *value);
+int CCD1_Get_AO(uint16_t *value);
+int CCD2_Get_AO(uint16_t *value);
+int CCD3_Get_AO(uint16_t *value);
+int CCD4_Get_AO(uint16_t *value);
 
 
 #endif /* TSP_ADC_H */

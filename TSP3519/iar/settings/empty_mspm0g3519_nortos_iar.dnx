@@ -21,8 +21,8 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <PlDriver>
-        <MemConfigValue>D:\iar\ewarm-9.60.3\arm\config\debugger\TexasInstruments\MSPM0G3519.ddf</MemConfigValue>
         <FirstRun>0</FirstRun>
+        <MemConfigValue>D:\iar\ewarm-9.60.3\arm\config\debugger\TexasInstruments\MSPM0G3519.ddf</MemConfigValue>
     </PlDriver>
     <XdsDriver>
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
@@ -33,14 +33,14 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <Jet>
+        <JetConnSerialNo>CMSIS-DAP v2:00000080066BFF534867784967182457A5A5A5A597969908</JetConnSerialNo>
+        <JetConnFoundProbes>CMSIS-DAP v1:00000080066bff534867784967182457a5a5a5a597969908:CMSIS-DAP v2:00000080066BFF534867784967182457A5A5A5A597969908:</JetConnFoundProbes>
+        <PrevWtdReset>System</PrevWtdReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>1</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
         <CpuHaltOnBreakpointSet>0</CpuHaltOnBreakpointSet>
         <OnlineReset>Software</OnlineReset>
-        <JetConnSerialNo>CMSIS-DAP v2:00000080066BFF534867784967182457A5A5A5A597969908</JetConnSerialNo>
-        <JetConnFoundProbes>CMSIS-DAP v1:00000080066bff534867784967182457a5a5a5a597969908:CMSIS-DAP v2:00000080066BFF534867784967182457A5A5A5A597969908:</JetConnFoundProbes>
-        <PrevWtdReset>System</PrevWtdReset>
     </Jet>
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
@@ -56,7 +56,7 @@
         <PowerConnectPC>1</PowerConnectPC>
     </SWOManager>
     <DebugChecksum>
-        <Checksum>4010910219</Checksum>
+        <Checksum>2640007492</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -107,7 +107,8 @@
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Count>0</Count>
+        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\TSP3519\TSP_CCD.c}.100.9" 0 0 1 "" 0 "" 0</Bp0>
+        <Count>1</Count>
     </Breakpoints2>
     <DriverProfiling>
         <Enabled>0</Enabled>
@@ -123,7 +124,12 @@
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
     <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
+        <A0>_ "/home/developer/.cache/bazel/_bazel_developer/2ca1f4ebdc59348ffdc31d97a51a98d5/execroot/__main__/bazel-out/k8-opt/bin/source/ti/driverlib/m0p\dl_factoryregion.c" ""</A0>
+        <A1>_ "/home/developer/.cache/bazel/_bazel_developer/2ca1f4ebdc59348ffdc31d97a51a98d5/execroot/__main__/bazel-out/k8-opt/bin/source/ti/driverlib\dl_adc12.c" ""</A1>
+        <A2>_ "/home/developer/.cache/bazel/_bazel_developer/2ca1f4ebdc59348ffdc31d97a51a98d5/execroot/__main__/bazel-out/k8-opt/bin/source/ti/driverlib\dl_common.h" ""</A2>
+        <A3>_ "/home/developer/.cache/bazel/_bazel_developer/2ca1f4ebdc59348ffdc31d97a51a98d5/execroot/__main__/bazel-out/k8-opt/bin/source/ti/driverlib\dl_spi.c" ""</A3>
+        <A4>_ "/home/developer/.cache/bazel/_bazel_developer/2ca1f4ebdc59348ffdc31d97a51a98d5/execroot/__main__/bazel-out/k8-opt/bin/source/ti/driverlib\dl_spi.h" ""</A4>
+        <Count>5</Count>
+        <SuppressDialog>1</SuppressDialog>
     </Aliases>
 </settings>
