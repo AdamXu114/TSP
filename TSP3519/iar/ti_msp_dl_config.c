@@ -344,8 +344,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_Servo_init(void) {
 
     
     DL_TimerG_setCCPDirection(Servo_INST , DL_TIMER_CC0_OUTPUT | DL_TIMER_CC1_OUTPUT );
-    DL_TimerG_startCounter(Servo_INST);
-	
+
 
 }
 /*
@@ -410,7 +409,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_Motor_init(void) {
 
     
     DL_TimerA_setCCPDirection(Motor_INST , DL_TIMER_CC0_OUTPUT | DL_TIMER_CC1_OUTPUT | DL_TIMER_CC2_OUTPUT | DL_TIMER_CC3_OUTPUT );
-    DL_TimerA_startCounter(Motor_INST);
+
 
 }
 
@@ -453,6 +452,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_QEI_2_init(void) {
         DL_TIMER_CC_INPUT_INV_NOINVERT, DL_TIMER_CC_1_INDEX);
     DL_TimerG_setLoadValue(QEI_2_INST, 65535);
     DL_TimerG_enableClock(QEI_2_INST);
+    DL_TimerG_startCounter(QEI_2_INST);
 }
 
 
@@ -555,7 +555,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_LCD_init(void) {
 /* CCD Initialization */
 static const DL_ADC12_ClockConfig gCCDClockConfig = {
     .clockSel       = DL_ADC12_CLOCK_SYSOSC,
-    .divideRatio    = DL_ADC12_CLOCK_DIVIDE_8,
+    .divideRatio    = DL_ADC12_CLOCK_DIVIDE_4,
     .freqRange      = DL_ADC12_CLOCK_FREQ_RANGE_24_TO_32,
 };
 SYSCONFIG_WEAK void SYSCFG_DL_CCD_init(void)

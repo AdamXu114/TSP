@@ -54,7 +54,7 @@ uint8_t flag_20_ms = 0; // 用于标记 20 ms 周期
 uint32_t dt = 200;
 uint32_t RES_value = 0; // 旋转编码器的值
 int16_t gz = 0; // 陀螺仪 Z 轴数据
-
+volatile uint8_t pha = 0,phb = 0; // 编码器的相位 A 和 B
 //---------------------------------------------主函数---------------------------------------------------//
 int main(void)
 {
@@ -63,14 +63,17 @@ int main(void)
 	SYSCFG_DL_init();
 	
 	//DL_FlashCTL_executeClearStatus();
-	Enable_GPIOA_INT();
+	//Enable_GPIOA_INT();
 	tsp_tft18_init();
 	//tsp_tft18_test_color();
 	tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
-    MPU6050_Init();
-    
+    //MPU6050_Init();
+    //CCD_test();
+	Motor_test();
 	while (1) {
 		float rpy[3];
+		pha = PHA0();
+		phb = PHB0(); // 获取编码器值
 		if(S0())
 			LED_ON();
 		else
@@ -94,8 +97,9 @@ int main(void)
         tsp_tft18_show_str(0, 2, buf);
         sprintf(buf, "Yaw: %.2f", rpy[2]);
         tsp_tft18_show_str(0, 3, buf);
-
+		// tsp_tft18_show_uint8(80,6, pha);
+		// tsp_tft18_show_uint8(80,7, phb);
 		tsp_tft18_show_uint16(0, 7, RES_value);
-        tsp_tft18_show_uint16(0, 5, count++);
+        // tsp_tft18_show_uint16(0, 5, count++);
 	}	
 }

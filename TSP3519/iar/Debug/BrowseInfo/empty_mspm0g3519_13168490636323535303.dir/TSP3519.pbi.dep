@@ -103,4 +103,8 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_131684
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_qei.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_pwm.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_MPU6050.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_TFT18.h
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_TFT18.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_CCD.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_isr.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_motor.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_servo.h

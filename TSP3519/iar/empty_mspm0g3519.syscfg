@@ -67,7 +67,6 @@ pinFunction6.inputFreq = 32.768;
 pinFunction6.enable    = true;
 
 ADC121.adcMem0chansel        = "DL_ADC12_INPUT_CHAN_1";
-ADC121.sampClkDiv            = "DL_ADC12_CLOCK_DIVIDE_8";
 ADC121.repeatMode            = true;
 ADC121.adcMem4chansel        = "DL_ADC12_INPUT_CHAN_4";
 ADC121.adcMem5chansel        = "DL_ADC12_INPUT_CHAN_5";
@@ -84,6 +83,7 @@ ADC121.adcMem3_name          = "CCD2_AO";
 ADC121.adcMem3chansel        = "DL_ADC12_INPUT_CHAN_6";
 ADC121.adcMem6_name          = "CCD4_AO";
 ADC121.adcMem6chansel        = "DL_ADC12_INPUT_CHAN_2";
+ADC121.sampClkDiv            = "DL_ADC12_CLOCK_DIVIDE_4";
 ADC121.adcPin4Config.$name   = "ti_driverlib_gpio_GPIOPinGeneric19";
 ADC121.adcPin5Config.$name   = "ti_driverlib_gpio_GPIOPinGeneric18";
 ADC121.adcPin6Config.$name   = "ti_driverlib_gpio_GPIOPinGeneric21";
@@ -218,7 +218,6 @@ PWM2.ccp3PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric10";
 
 QEI1.timerStartTimer                    = true;
 QEI1.$name                              = "QEI_1";
-QEI1.peripheral.$assign                 = "TIMG9";
 QEI1.peripheral.ccp0Pin.$assign         = "PB7";
 QEI1.peripheral.ccp1Pin.$assign         = "PB9";
 QEI1.ccp0PinConfig.hideOutputInversion  = scripting.forceWrite(false);
@@ -231,6 +230,7 @@ QEI1.ccp1PinConfig.passedPeripheralType = scripting.forceWrite("Digital");
 QEI1.ccp1PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric14";
 
 QEI2.$name                              = "QEI_2";
+QEI2.timerStartTimer                    = true;
 QEI2.peripheral.ccp0Pin.$assign         = "PB15";
 QEI2.peripheral.ccp1Pin.$assign         = "PB16";
 QEI2.ccp0PinConfig.hideOutputInversion  = scripting.forceWrite(false);
@@ -330,4 +330,5 @@ GPIO3.associatedPins[2].pin.$suggestSolution       = "PC5";
 GPIO3.associatedPins[3].pin.$suggestSolution       = "PC0";
 PWM1.peripheral.$suggestSolution                   = "TIMG7";
 PWM2.peripheral.$suggestSolution                   = "TIMA0";
+QEI1.peripheral.$suggestSolution                   = "TIMG9";
 QEI2.peripheral.$suggestSolution                   = "TIMG8";

@@ -16,16 +16,16 @@ void ADC_Init(void) {//已经在SYSCFG_DL_init中调用，不需要单独调用
  */
 int ADC_ReadValue(DL_ADC12_MEM_IDX channel,uint16_t *value) {
     switch(channel){
-        case DL_ADC12_MEM_IDX_2:
+        case DL_ADC12_MEM_IDX_2:// CCD1
             *value = DL_ADC12_getMemResult(CCD_INST, CCD_ADCMEM_CCD1_AO);
             break;
-        case DL_ADC12_MEM_IDX_3:
+        case DL_ADC12_MEM_IDX_3:// CCD2
             *value = DL_ADC12_getMemResult(CCD_INST, CCD_ADCMEM_CCD2_AO);
             break;
-        case DL_ADC12_MEM_IDX_4:
+        case DL_ADC12_MEM_IDX_4:// CCD3
             *value = DL_ADC12_getMemResult(CCD_INST, CCD_ADCMEM_CCD3_AO);
             break;
-        case DL_ADC12_MEM_IDX_6:
+        case DL_ADC12_MEM_IDX_6:// CCD4
             *value = DL_ADC12_getMemResult(CCD_INST, CCD_ADCMEM_CCD4_AO);
             break;
         default:

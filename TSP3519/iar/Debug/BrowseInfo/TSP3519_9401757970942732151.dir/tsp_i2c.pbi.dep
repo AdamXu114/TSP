@@ -1,13 +1,5 @@
 D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\TSP3519_9401757970942732151.dir\tsp_i2c.pbi: \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_gpio.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_TFT18.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_i2c.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_MPU6050.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_pwm.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_qei.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_uart.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_adc.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_common_headfile.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_i2c.c \
   D:\Study_resources\电赛\TSP\TSP3519\iar\ti_msp_dl_config.h \
   D:\ti\mspm0_sdk_2_05_01_00\source\ti\devices\msp\msp.h \
   D:\ti\mspm0_sdk_2_05_01_00\source\ti\devices\DeviceFamily.h \
@@ -99,7 +91,20 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\TSP3519_940175797094273
   D:\ti\mspm0_sdk_2_05_01_00\source\ti\driverlib\dl_wwdt.h \
   D:\ti\mspm0_sdk_2_05_01_00\source\ti\driverlib\m0p\dl_interrupt.h \
   D:\ti\mspm0_sdk_2_05_01_00\source\ti\driverlib\m0p\dl_systick.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_i2c.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_gpio.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_common_headfile.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\stdio.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\string.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\DLib_Product_string.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_i2c.c
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_adc.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_uart.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_qei.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_pwm.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_MPU6050.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_TFT18.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_CCD.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_isr.h \
+  D:\Study_resources\电赛\TSP\TSP3519\TSP3519\tsp_common_headfile.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_motor.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_servo.h

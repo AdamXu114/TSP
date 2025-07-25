@@ -3,7 +3,8 @@
         "tsp_i2c.h": "c",
         "ti_msp_dl_config.h": "c",
         "tsp_isr.h": "c",
-        "tsp_gpio.h": "c"
+        "tsp_gpio.h": "c",
+        "tsp_common_headfile.h": "c"
     },
     "Codegeex.RepoIndex": true
 }

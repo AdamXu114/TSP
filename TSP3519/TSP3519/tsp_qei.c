@@ -14,12 +14,14 @@ static volatile int8_t qei2_direction = 0;
 void TSP_QEI_Init(void)
 {
     // 初始化 QEI硬件（由SysConfig生成的初始化函数）
-    SYSCFG_DL_QEI_1_init();
-    SYSCFG_DL_QEI_2_init();
-    qei1_last_count = 0;
-    qei2_last_count = 0;
-    qei1_direction = 0;
-    qei2_direction = 0;
+    //SYSCFG_DL_QEI_1_init();
+    //SYSCFG_DL_QEI_2_init();
+    DL_TimerG_startCounter(QEI_1_INST);
+    DL_TimerG_startCounter(QEI_2_INST);
+    qei1_last_count = 0; // 初始化QEI1的计数器为0
+    qei2_last_count = 0; // 初始化QEI2的计数器为0
+    qei1_direction = 0; // 初始化QEI1的方向为0
+    qei2_direction = 0; // 初始化QEI2的方向为0
 }
 
 

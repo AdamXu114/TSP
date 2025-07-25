@@ -1150,6 +1150,12 @@
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_liball.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_motor.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_motor.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_servo.c</name>
         </file>
         <file>
@@ -1175,6 +1181,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\TSP3519\tsp_adc.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\TSP3519\TSP_CCD.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\TSP3519\TSP_CCD.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\TSP3519\tsp_common_headfile.h</name>

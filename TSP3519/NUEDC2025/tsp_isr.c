@@ -111,17 +111,17 @@ void UART6_IRQHandler (void)
 
 void GROUP1_IRQHandler(void)
 {
-    switch( DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1))	{
+    switch(DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1))	{
 		case DL_INTERRUPT_GROUP1_IIDX_GPIOA:
 			if (DL_GPIO_getEnabledInterruptStatus(PORTA_PORT, PORTA_PHA0_PIN)) {
 				//PHA0中断
-				tsp_tft18_show_str(0, 6, "PHA0 Int");
+				//tsp_tft18_show_str(0, 6, "PHA0 Int");
 				if(PHA0()){      // rising edge on PHA0
 					if(!PHB0()) RES_value++;// low on PHB0 -> CW
 					else if(RES_value>0)RES_value--;// high on PHB0 -> CCW
 				}else{             // falling edge on PHA0
-					// if(PHB0())RES_value++;// high on PHB0 -> CW
-					// else if(RES_value>0)RES_value--; // low on PHB0 -> CCW
+					if(PHB0())RES_value++;// high on PHB0 -> CW
+					else if(RES_value>0)RES_value--; // low on PHB0 -> CCW
 				}
 				DL_GPIO_clearInterruptStatus(PORTA_PORT, PORTA_PHA0_PIN);
 			}break;
@@ -133,9 +133,6 @@ void GROUP1_IRQHandler(void)
 			tsp_tft18_show_str(0, 6, "PHC0 Int");break;
 
 		default:tsp_tft18_show_str(0, 6, "Interrupt Error");break;
-
-			
 	}
 	
-
 }

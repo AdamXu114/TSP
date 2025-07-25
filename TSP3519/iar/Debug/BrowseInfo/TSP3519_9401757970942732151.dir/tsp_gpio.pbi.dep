@@ -102,4 +102,9 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\TSP3519_940175797094273
   D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_qei.h \
   D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\tsp_pwm.h \
   D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_MPU6050.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_TFT18.h
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_TFT18.h \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519\TSP_CCD.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_isr.h \
+  D:\Study_resources\电赛\TSP\TSP3519\TSP3519\tsp_common_headfile.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_motor.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_servo.h
