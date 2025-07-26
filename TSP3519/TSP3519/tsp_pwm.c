@@ -1,6 +1,7 @@
 #include "ti_msp_dl_config.h"
 #include "tsp_pwm.h"
 #include "tsp_tft18.h"
+#include "tsp_qei.h"
 
 #define CH1_LOWER_LIMIT	300U
 #define CH1_UPPER_LIMIT	2100U
@@ -20,6 +21,15 @@ extern float ki_turn_motor; // 原地转向电机控制的积分系数
 extern float kd_turn_motor; // 原地转向电机控制的微分系数
 
 extern float kp_angle_to_err; // 角度转误差的比例系数
+extern float yaw; // 当前航向角
+extern float roll; // 当前滚转角
+extern float pitch; // 当前俯仰角
+
+
+extern int16_t target_speed_qei1; // 目标速度 QEI1
+extern int16_t target_speed_qei2; // 目标速度 QEI2
+extern int16_t current_speed_qei1; // 当前速度 QEI1
+extern int16_t current_speed_qei2; // 当前速度 QEI2
 
 
 void pwm_init(void){
@@ -29,6 +39,8 @@ void pwm_init(void){
 }
 
 // 舵机驱动函数
+// servo1为水平（减为顺时针，加为逆时针）
+// servo2为垂直（减为抬头，加为低头）
 void tsp_servo_angle(uint8_t channel, uint16_t pulse_width){
 
 	uint16_t duty;
@@ -57,9 +69,7 @@ void tsp_servo_angle(uint8_t channel, uint16_t pulse_width){
 }
 
 // 电机驱动函数
-// servo1为水平（减为顺时针，加为逆时针）
-// servo2为垂直（减为抬头，加为低头）
-void tsp_motor_voltage(uint8_t dir, uint16_t duty_cycle)
+void tsp_motor_voltage(uint8_t dir, uint16_t duty_cycle, uint8_t motor)
 {
 	uint16_t dc;
 	
@@ -69,109 +79,47 @@ void tsp_motor_voltage(uint8_t dir, uint16_t duty_cycle)
 	tsp_tft18_show_str_color(0,2, "Motor Voltage Set", BLUE, YELLOW);
 	DL_GPIO_setPins(GPIO_Motor_C0_PORT, GPIO_Motor_C0_PIN);
 	DL_GPIO_setPins(GPIO_Motor_C1_PORT, GPIO_Motor_C1_PIN);
+	DL_GPIO_setPins(GPIO_Motor_C2_PORT, GPIO_Motor_C2_PIN);
+	DL_GPIO_setPins(GPIO_Motor_C3_PORT, GPIO_Motor_C3_PIN);
 	switch (dir)
 	{
 		case MOTORF:
-			DL_TimerG_setCaptureCompareValue(Motor_INST, dc, DL_TIMER_CC_0_INDEX);
-			DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_1_INDEX);
+			if(motor == MOTOR1){
+				DL_TimerG_setCaptureCompareValue(Motor_INST, dc, DL_TIMER_CC_0_INDEX);
+				DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_1_INDEX);
+			}
+			else if(motor == MOTOR2){
+				DL_TimerG_setCaptureCompareValue(Motor_INST, dc, DL_TIMER_CC_2_INDEX);
+				DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_3_INDEX);
+			}
 			break;
 		case MOTORB:
-			DL_TimerG_setCaptureCompareValue(Motor_INST, dc, DL_TIMER_CC_0_INDEX);
-			DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_1_INDEX);
+			if(motor == MOTOR1){
+				DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_0_INDEX);
+				DL_TimerG_setCaptureCompareValue(Motor_INST, dc, DL_TIMER_CC_1_INDEX);
+			}
+			else if(motor == MOTOR2){
+				DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_2_INDEX);
+				DL_TimerG_setCaptureCompareValue(Motor_INST, dc, DL_TIMER_CC_3_INDEX);
+			}
 			break;
 		default:
 			break;
 	}
 }
 
-// void tsp_motor_stop(void) // 停车
-// {
-// 	DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_0_INDEX);
-// 	DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_1_INDEX);
-// 	tsp_tft18_show_str_color(0, 1, "Motor Stop", BLUE, YELLOW);
-// }
+// 封装后的电机控制函数
+void tsp_motor_control(int16_t dc, uint8_t motor){
+	if(dc > 0 || dc == 0){
+		tsp_motor_voltage(MOTORF, dc, motor);
+	}
+	else if(dc < 0){
+		tsp_motor_voltage(MOTORB, -dc, motor);
+	}
+}
 
-// // 实现原地左转或右转一定角度的函数
-// void tsp_motor_turn_inplace(uint8_t dir, uint16_t duty_cycle, uint16_t angle) 
-// {
-// 	uint16_t dc;
-	
-// 	dc = duty_cycle;
-// 	if (MOTOR_DC_LIMIT < duty_cycle)
-// 		dc = MOTOR_DC_LIMIT;
-// 	float target_yaw = yaw;
-// 	switch(dir){
-// 		case LEFT:
-// 		target_yaw = yaw + angle; // yaw是当前角度，需要获取当前yaw，下面的yaw也待更新
-// 		break;
-// 		case RIGHT:
-// 		target_yaw = yaw - angle; // yaw是当前角度，需要获取当前yaw，下面的yaw也待更新
-// 		break;
-// 		default:
-// 			return; // 无效方向
-// 	}
-	
-// 	if (target_yaw > 360.0f) target_yaw -= 360.0f;
-// 	if (target_yaw < 0.0f) target_yaw += 360.0f;
-
-// 	tsp_tft18_show_str_color(0, 1, "Motor Turn Left", BLUE, YELLOW);
-
-// 	// 简单PID参数
-// 	float error, output;
-// 	while (1) {
-// 		// 计算误差
-// 		error = target_yaw - yaw;
-// 		// 保证误差在[-180,180]区间
-// 		if (error > 180.0f) error -= 360.0f;
-// 		if (error < -180.0f) error += 360.0f;
-
-// 		// 到达目标角度则退出
-// 		if (fabsf(error) < 2.0f) break;
-
-// 		// 简单P控制
-// 		output = kp_turn_motor * error;
-// 		if (output > dc) output = dc;
-// 		if (output < 10) output = 10; // 最小转速
-
-// 		DL_TimerG_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_0_INDEX);
-// 		DL_TimerG_setCaptureCompareValue(Motor_INST, (uint16_t)output, DL_TIMER_CC_1_INDEX);
-
-// 		// 这里应有延时和yaw更新
-// 		tsp_delay_ms(10);
-// 		yaw = get_current_yaw(); // 需要实现获取当前yaw的函数
-// 	}
-// }
-
-// // PID控制电机速度
-// void tsp_motor_speed_pid(uint16_t target_speed_pid, uint8_t motor)
-// {
-// 	static float integral = 0.0f;
-// 	static float prev_error = 0.0f;
-// 	float error = target_speed_pid - current_speed;
-// 	float output;
-
-// 	integral += error;
-// 	float derivative = error - prev_error;
-
-// 	output = kp_motor * error + ki_motor * integral + kd_motor * derivative;
-
-// 	// 限制输出范围
-// 	if (output > MOTOR_DC_LIMIT) output = MOTOR_DC_LIMIT;
-// 	if (output < 0) output = 0;
-
-// 	// 设置PWM占空比
-// 	if (motor == MOTOR1)
-// 		DL_TimerG_setCaptureCompareValue(Motor_INST, (uint16_t)output, DL_TIMER_CC_0_INDEX);
-// 	else if (motor == MOTOR2)
-// 		DL_TimerG_setCaptureCompareValue(Motor_INST, (uint16_t)output, DL_TIMER_CC_1_INDEX);
-// 	else
-// 		return; // 无效电机编号
-
-// 	prev_error = error;
-// }
-
-// // 差速底盘巡线
-// void tsp_line_follower(float err){ 
-// 	tsp_motor_speed_pid(target_speed + kp_angle_to_err * err, MOTOR1);
-// 	tsp_motor_speed_pid(target_speed - kp_angle_to_err * err, MOTOR2);
-// }
+// 更新当前速度
+void tsp_update_current_speed(void){
+	current_speed_qei1 = tsp_qei1_get_speed();
+	current_speed_qei2 = tsp_qei2_get_speed();
+}

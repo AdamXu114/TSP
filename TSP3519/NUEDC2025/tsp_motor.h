@@ -12,4 +12,25 @@ void tsp_encoder_get_value(uint32_t *value);
 // 清零编码器
 void tsp_encoder_clear(void);
 
+// 电机测试
+void Motor_test(void);
+
+// 电机速度闭环控制
+void tsp_speed_close_loop(void);
+
+// 电机电压控制
+void tsp_motor_voltage(uint8_t dir, uint16_t duty_cycle, uint8_t motor);
+
+// 电机控制
+void tsp_motor_control(int16_t output, uint8_t motor);
+
+// 停车
+void tsp_motor_stop(void);
+
+// 原地转向
+void tsp_motor_turn_inplace(uint8_t dir, uint16_t duty_cycle_limit, uint16_t angle);
+
+// 差速底盘巡线
+void tsp_line_follower(float err);
+
 #endif // TSP_MOTOR_H

@@ -44,6 +44,7 @@ float kd_motor = 0.0f; // 电机控制的微分系数
 float kp_servo = 0.0f; // 舵机控制的比例系数
 float ki_servo = 0.0f;
 float kd_servo = 0.0f; // 舵机控制的微分系数
+float speed = 0.0f; // 目标速度
 
 float kp_turn_motor = 1.0f; // 原地转向电机控制的比例系数
 float ki_turn_motor = 0.0f;

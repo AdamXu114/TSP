@@ -7,6 +7,11 @@ extern uint8_t rx_buffer[];
 extern uint16_t rx_idx;
 extern uint8_t rx_flag;
 extern uint32_t RES_value;
+
+extern int16_t encoder_pulse_qei1;
+extern int16_t encoder_pulse_qei2;
+extern int16_t encoder_speed_qei1;
+extern int16_t encoder_speed_qei2;
 void delay_1ms(uint32_t count)
 {
 	delay = count;
@@ -23,6 +28,12 @@ void SysTick_Handler()
 	{
 		// LED_R_TOGGLE();
 		flag_20_ms = 1;
+		encoder_pulse_qei1 = TSP_QEI1_GetCount();
+		encoder_pulse_qei2 = TSP_QEI2_GetCount();
+		encoder_speed_qei1 = encoder_pulse_qei1 - 5000;
+		encoder_speed_qei2 = encoder_pulse_qei2 - 5000;
+		DL_Timer_setCounterValueAfterEnable(QEI_1_INST, 5000);
+		DL_Timer_setCounterValueAfterEnable(QEI_2_INST, 5000);
 	}
 }
 uint32_t get_systick_counter(void)

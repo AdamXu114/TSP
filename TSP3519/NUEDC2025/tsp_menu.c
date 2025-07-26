@@ -32,17 +32,19 @@ uint8_t menu_item0[8][20]=
 	// "8.SpeedSetting",
 };
 
-
-
+extern float kp_motor = 1.0f; // 电机控制的比例系数
+extern float ki_motor = 0.0f;
+extern float kd_motor = 0.0f; // 电机控制的微分系数
+extern float kp_servo = 0.0f; // 舵机控制的比例系数
+extern float ki_servo = 0.0f;
+extern float kd_servo = 0.0f; // 舵机控制的微分系数
+extern float speed; // 目标速度
 
 
 uint8_t tsp_menu_loop(void)
 {
 	uint8_t ItemNumber=0;
 	uint8_t CmdIdx=0, CmdOk=0;
-	uint8_t StatusA, StatusB;
-	uint8_t tStatusA, tStatusB;
-
 	tsp_tft18_clear(BLACK);
     
 	tsp_tft18_show_str(32, 0, menu_item0[0]);
@@ -58,11 +60,10 @@ uint8_t tsp_menu_loop(void)
 	
 	Scroll = keySTILL;
 
-	StatusA = PHA2();   StatusB = PHB2();
-	tStatusA = StatusA; tStatusB = StatusB;
 
 	while (1)
 	{
+		//TODO:修改按键
 		Scroll = keySTILL;
 		if (!S1())
 		{
@@ -85,7 +86,6 @@ uint8_t tsp_menu_loop(void)
 			{
 				show_menu_cursor(ItemNumber--, BLACK);
 				show_menu_cursor(ItemNumber, WHITE);
-				tsp_cat9555_seg7_decimal(ItemNumber+1);
 			}
 		}
 		if (keyDOWN == Scroll)	// cursor move down
@@ -94,7 +94,6 @@ uint8_t tsp_menu_loop(void)
 			{
 				show_menu_cursor(ItemNumber++, BLACK);
 				show_menu_cursor(ItemNumber, WHITE);
-				tsp_cat9555_seg7_decimal(ItemNumber+1);
 			}
 		}
 
@@ -135,6 +134,180 @@ void show_menu_cursor(uint8_t ItemNumber, uint16_t color)
 			else
 				tsp_tft18_write_2byte(BLACK);
 			temp2 >>= 1;
+		}
+	}
+}
+
+
+void para_set()
+{
+	char value_str[4];
+	uint8_t item=0, item_t=0;
+	uint8_t StatusPHA, StatusPHB;
+	uint8_t jStatusPHA, jStatusPHB;
+	uint8_t change=0;		// 0: no change; 1: increase; 2: decrease
+  
+	tsp_tft18_clear(BLACK);
+	tsp_tft18_set_region(0, 0, TFT_X_MAX-1, TFT_Y_MAX-1);
+	tsp_tft18_show_str_color(0, 0, "-Smartcar PID Demo--", BLUE, YELLOW);
+	tsp_tft18_show_str(16, 1, "TargetV:");
+	tsp_tft18_show_str(24, 2, "Kp: ");
+	tsp_tft18_show_str(24, 3, "Ki: ");
+	tsp_tft18_show_str(24, 4, "Kd: ");
+	
+	sprintf(value_str, "%03d", speed);
+	tsp_tft18_show_str(88, 1, value_str);
+	
+	sprintf(value_str, "%0.1f", kp_motor);
+	tsp_tft18_show_str(88, 2, value_str);
+	tsp_tft18_show_str(0, 2, "->");
+
+	sprintf(value_str, "%0.1f", ki_motor);
+	tsp_tft18_show_str(88, 3, value_str);
+
+	sprintf(value_str, "%2.1f", kd_motor);
+	tsp_tft18_show_str(88, 4, value_str);
+
+	item = item_t = 1;
+	StatusPHA = jStatusPHA = PHA0();
+	StatusPHB = jStatusPHB = PHB0();
+
+	while(1)
+	{
+		Scroll = keySTILL;
+		if (!S1())
+		{
+			delay_1ms(2);
+			if (!S1())
+			{
+				Scroll = keyUP;
+				if(item>1)
+				{
+				  item--;
+				  item_t = item;
+				}
+			}
+			while(!S1());
+		}
+		if (!S2())
+		{
+			delay_1ms(2);
+			if (!S2())
+			{
+				Scroll = keyDOWN;
+				if(item<3)
+				{
+				  item++;
+				  item_t = item;
+				}
+			}
+			while(!S2());
+		}
+		if(Scroll != keySTILL)
+		{
+			switch(item)
+			{
+			case 1:
+				tsp_tft18_show_str(0, 2, "->");
+				tsp_tft18_show_str(0, 3, "  ");
+				tsp_tft18_show_str(0, 4, "  ");
+				break;
+			case 2:
+				tsp_tft18_show_str(0, 2, "  ");
+				tsp_tft18_show_str(0, 3, "->");
+				tsp_tft18_show_str(0, 4, "  ");
+				break;
+			case 3:
+				tsp_tft18_show_str(0, 2, "  ");
+				tsp_tft18_show_str(0, 3, "  ");
+				tsp_tft18_show_str(0, 4, "->");
+				break;
+			default:
+				break;
+			}
+		}
+
+		StatusPHA = PHA0();   StatusPHB = PHB0();
+		change = 0;
+		if ((jStatusPHA!=StatusPHA) && (RESET==StatusPHA))
+		{
+			if (SET == StatusPHB) 		// CW to increase
+			{
+					change = 1;
+			}
+			if (RESET == StatusPHB)   // CCW to decrease
+			{
+					change = 2;
+			}
+			delay_1ms(10);
+		}
+		jStatusPHA = StatusPHA;
+		jStatusPHB = StatusPHB;
+		
+		switch(item)
+		{
+		case 1:		// Kp
+			if(change == 1)
+			{
+				kp_motor += 0.1;
+            if(kp_motor > 9.0)
+              kp_motor = 9.0;
+			}
+			else if(change == 2)
+			{
+				if(kp_motor > 2.1 )
+				  kp_motor -= 0.1;
+			}
+			break;
+		case 2:		// Ki
+			if(change == 1)
+			{
+				if(ki_motor < 1)
+				  ki_motor += 0.1;
+			}
+			else if(change == 2)
+			{
+				ki_motor -= 0.1;
+            if(ki_motor < 0.0 )
+               ki_motor = 0.0;
+			}
+			break;
+		case 3:		// Kd
+			if(change == 1)
+			{
+				if(kd_motor < 15)
+				  kd_motor += 0.5;
+			}
+			else if(change == 2)
+			{
+				kd_motor -= 0.5;
+            if(kd_motor < 0.0 )
+               kd_motor = 0.0;
+			}
+			break;
+		default:		// TargetV
+			break;
+		}
+		
+		if(change != 0)
+		{
+			sprintf(value_str, "%0.1f", kp_motor);
+			tsp_tft18_show_str(88, 2, value_str);
+			
+			sprintf(value_str, "%0.1f", ki_motor);
+			tsp_tft18_show_str(88, 3, value_str);
+
+			sprintf(value_str, "%2.1f", kd_motor);
+			tsp_tft18_show_str(88, 4, value_str);
+		}
+
+		if(!PUSH())
+		{
+			tsp_tft18_show_str(0, 2, "  ");
+			tsp_tft18_show_str(0, 3, "  ");
+			tsp_tft18_show_str(0, 4, "  ");
+			break;
+         while(!PUSH()) {}
 		}
 	}
 }
