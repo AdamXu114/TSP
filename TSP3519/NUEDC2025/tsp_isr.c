@@ -6,7 +6,8 @@ extern uint8_t flag_20_ms;
 extern uint8_t rx_buffer[];
 extern uint16_t rx_idx;
 extern uint8_t rx_flag;
-extern uint32_t RES_value;
+extern uint8_t RES_value;
+extern uint8_t change;
 
 extern int16_t encoder_pulse_qei1;
 extern int16_t encoder_pulse_qei2;
@@ -124,12 +125,16 @@ void GROUP1_IRQHandler(void)
 {
     if(DL_GPIO_getEnabledInterruptStatus(PORTA_PORT, PORTA_PHA0_PIN)) {
 		if(PHA0()){      // rising edge on PHA0
-				if(!PHB0()) RES_value++;// low on PHB0 -> CW
-				else if(RES_value>0)RES_value--;// high on PHB0 -> CCW
-			else{             // falling edge on PHA0
-				if(PHB0())RES_value++;// high on PHB0 -> CW
-				else if(RES_value>0)RES_value--; // low on PHB0 -> CCW
-			}
+			if(!PHB0()) 
+				{RES_value++;change = 1;}// low on PHB0 -> CW
+			else 
+				{if(RES_value>0)RES_value--;change = 2;} // high on PHB0 -> CCW
+		}
+		else{             // falling edge on PHA0
+			if(PHB0())
+				{RES_value++;change = 1;}// high on PHB0 -> CW
+			else 
+				{if(RES_value>0)RES_value--;change = 2;} // low on PHB0 -> CCW
 		}
 		DL_GPIO_clearInterruptStatus(PORTA_PORT, PORTA_PHA0_PIN);
 	}

@@ -5,7 +5,7 @@ extern ccd_t ccd_data_raw, ccd_data_old; // CCD 数据缓存
 extern uint8_t ccd_index; // CCD 数据索引
 ccd_t ccd_data_gray, ccd_data_binary; // 灰度图和二值图缓存
 ccd_t ccd_data_show, ccd_data_temp;
-extern uint32_t RES_value; // 旋转编码器的值
+extern uint8_t RES_value; // 旋转编码器的值
 void tsp_show1_ccd_gray(const ccd_t data)
 {
     uint16_t temp = 0;

@@ -57,7 +57,7 @@ int16_t encoder_speed_qei2;
 
 float kp_angle_to_err = 1.0f; // 角度转误差的比例系数
 uint8_t flag_20_ms = 0; // 用于标记 20 ms 周期
-uint32_t RES_value = 0; // 旋转编码器的值
+uint8_t RES_value = 0; // 旋转编码器的值
 int16_t gz = 0; // 陀螺仪 Z 轴数据
 volatile uint8_t pha = 0,phb = 0; // 编码器的相位 A 和 B
 //---------------------------------------------主函数---------------------------------------------------//

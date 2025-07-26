@@ -1,4 +1,5 @@
 D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_13168490636323535303.dir\TSP3519.pbi: \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519.c \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_common_headfile.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\stdio.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\ycheck.h \
@@ -96,6 +97,7 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_131684
   D:\ti\mspm0_sdk_2_05_01_00\source\ti\driverlib\m0p\dl_systick.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_adc.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_gpio.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_common_headfile.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_uart.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_i2c.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_qei.h \
@@ -107,6 +109,6 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_131684
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_motor.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_servo.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_ccd_image.h \
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_CCD.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_menu.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\Kalman.h \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519.c
+  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\Kalman.h

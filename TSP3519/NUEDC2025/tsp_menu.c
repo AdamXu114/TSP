@@ -32,7 +32,8 @@ uint8_t menu_item0[8][20]=
 // extern float ki_servo = 0.0f;
 // extern float kd_servo = 0.0f; // 舵机控制的微分系数
 extern float speed; // 目标速度
-
+extern uint8_t RES_value;
+uint8_t change=0;		// 0: no change; 1: increase; 2: decrease
 
 uint8_t tsp_menu_loop(void)
 {
@@ -136,10 +137,7 @@ void para_set()
 {
 	char value_str[4];
 	uint8_t item=0, item_t=0;
-	uint8_t StatusPHA, StatusPHB;
-	uint8_t jStatusPHA, jStatusPHB;
-	uint8_t change=0;		// 0: no change; 1: increase; 2: decrease
-  
+
 	tsp_tft18_clear(BLACK);
 	tsp_tft18_set_region(0, 0, TFT_X_MAX-1, TFT_Y_MAX-1);
 	tsp_tft18_show_str_color(0, 0, "-Smartcar PID Demo--", BLUE, YELLOW);
@@ -161,9 +159,7 @@ void para_set()
 	sprintf(value_str, "%2.1f", kd_motor);
 	tsp_tft18_show_str(88, 4, value_str);
 
-	item = item_t = 1;
-	StatusPHA = jStatusPHA = PHA0();
-	StatusPHB = jStatusPHB = PHB0();
+	item = item_t = 0;
 
 	while(1)
 	{
@@ -174,7 +170,7 @@ void para_set()
 			if (!S1())
 			{
 				Scroll = keyUP;
-				if(item>1)
+				if(item>0)
 				{
 				  item--;
 				  item_t = item;
@@ -229,25 +225,8 @@ void para_set()
 			}
 		}
 
-		StatusPHA = PHA0();   StatusPHB = PHB0();
 		change = 0;
-		if ((jStatusPHA!=StatusPHA) && (RESET==StatusPHA))
-		{
-			sprintf(value_str, "change: %d", change);
-			tsp_tft18_show_str(0, 6, value_str);
-			if (SET == StatusPHB) 		// CW to increase
-			{
-					change = 1;
-			}
-			if (RESET == StatusPHB)   // CCW to decrease
-			{
-					change = 2;
-			}
-			delay_1ms(10);
-		}
-		jStatusPHA = StatusPHA;
-		jStatusPHB = StatusPHB;
-		
+		delay_1ms(10);
 		switch(item)
 		{
 		case 0:		// Speed
@@ -308,6 +287,9 @@ void para_set()
 		
 		if(change != 0)
 		{
+			sprintf(value_str, "%03d", speed);
+			tsp_tft18_show_str(88, 1, value_str);
+
 			sprintf(value_str, "%0.1f", kp_motor);
 			tsp_tft18_show_str(88, 2, value_str);
 			
@@ -317,9 +299,11 @@ void para_set()
 			sprintf(value_str, "%2.1f", kd_motor);
 			tsp_tft18_show_str(88, 4, value_str);
 		}
-
+		// sprintf(value_str, "RES: %3d", RES_value);
+		// tsp_tft18_show_str(0, 6, value_str);
 		if(S0())
 		{
+			tsp_tft18_show_str(0, 1, "  ");
 			tsp_tft18_show_str(0, 2, "  ");
 			tsp_tft18_show_str(0, 3, "  ");
 			tsp_tft18_show_str(0, 4, "  ");
