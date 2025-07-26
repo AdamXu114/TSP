@@ -40,8 +40,6 @@ void MPU6050_Init(void);
 void MPU6050ReadAcc(short *accData);
 void MPU6050ReadGyro(short *gyroData);
 void MPU6050GetRPY(float *Roll, float *Pitch, float *Yaw);
-void IMU_Update(float gx, float gy, float gz, 
-                float ax, float ay, float az);
 void gyro_bias_update(short *gyroData);
-
+float HighPassFilter(float input); //高通滤波器
 #endif /* TSP_MPU6050_H */

@@ -1141,6 +1141,12 @@
     <group>
         <name>NUEDU2025</name>
         <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\Kalman.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\Kalman.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_ccd_image.c</name>
         </file>
         <file>
@@ -1154,6 +1160,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_liball.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_menu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_menu.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_motor.c</name>

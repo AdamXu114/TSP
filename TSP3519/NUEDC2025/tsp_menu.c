@@ -32,12 +32,12 @@ uint8_t menu_item0[8][20]=
 	// "8.SpeedSetting",
 };
 
-extern float kp_motor = 1.0f; // 电机控制的比例系数
-extern float ki_motor = 0.0f;
-extern float kd_motor = 0.0f; // 电机控制的微分系数
-extern float kp_servo = 0.0f; // 舵机控制的比例系数
-extern float ki_servo = 0.0f;
-extern float kd_servo = 0.0f; // 舵机控制的微分系数
+// extern float kp_motor = 1.0f; // 电机控制的比例系数
+// extern float ki_motor = 0.0f;
+// extern float kd_motor = 0.0f; // 电机控制的微分系数
+// extern float kp_servo = 0.0f; // 舵机控制的比例系数
+// extern float ki_servo = 0.0f;
+// extern float kd_servo = 0.0f; // 舵机控制的微分系数
 extern float speed; // 目标速度
 
 
@@ -97,12 +97,12 @@ uint8_t tsp_menu_loop(void)
 			}
 		}
 
-		if (!S3())			// push button pressed        
+		if (S0())			// push button pressed        
 		{
 			delay_1ms(10);	// de-jitter
-			if (!S3())
+			if (S0())
 			{
-				while(!S3());
+				while(S0());
 				return ItemNumber;
 			}
 		}

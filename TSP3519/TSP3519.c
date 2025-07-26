@@ -34,6 +34,7 @@
 //---------------------------------------------头文件---------------------------------------------------//
 
 //---------------------------------------------全局变量---------------------------------------------------//
+uint8_t menu_id=0;			// MenuItem ID returned by Menu_Loop()
 uint8_t rx_buffer[128];
 uint16_t rx_idx = 0;
 uint8_t rx_flag = 0;
@@ -56,7 +57,6 @@ int16_t encoder_speed_qei2;
 
 float kp_angle_to_err = 1.0f; // 角度转误差的比例系数
 uint8_t flag_20_ms = 0; // 用于标记 20 ms 周期
-uint32_t dt = 200;
 uint32_t RES_value = 0; // 旋转编码器的值
 int16_t gz = 0; // 陀螺仪 Z 轴数据
 volatile uint8_t pha = 0,phb = 0; // 编码器的相位 A 和 B
@@ -72,10 +72,26 @@ int main(void)
 	tsp_tft18_init();
 	//tsp_tft18_test_color();
 	tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
-    //MPU6050_Init();
+	delay_1ms(1000);
+    MPU6050_Init();
     //CCD_test();
-	tsp_img_test();
+	//tsp_img_test();
 	//Motor_test();
+	while(1) {
+		menu_id = tsp_menu_loop();
+		switch(menu_id){
+			case 0U:
+				CCD_test();
+				break;
+			case 1U:
+				tsp_img_test();	
+			    break;
+			case 2U:
+				break;
+			default:break;
+		}
+		while(S0()) {}	// wait until S3 released
+	}
 	while (1) {
 		float rpy[3];
 		if(S0())
@@ -92,6 +108,7 @@ int main(void)
         if(flag_20_ms) {
             flag_20_ms = 0; // 清除标志
             MPU6050GetRPY(&rpy[0], &rpy[1], &rpy[2]);
+			//Angle_Calcu();
         }
         
 		char buf[64];

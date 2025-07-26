@@ -94,6 +94,10 @@ void tsp_ccd_image_erode(const ccd_t input, ccd_t output)
     for (uint16_t i = 1; i < CCD_PIXEL_COUNT - 1; i++) {
         if(input[i-1] == 0x0 && input[i+1] == 0x0)
             output[i] = 0x0;
+        else if(input[i-1] == 0xFF && input[i+1] == 0xFF)
+            output[i] = 0xFF;
+        else output[i] = input[i]; // 保留原像素值
+
     }
     output[CCD_PIXEL_COUNT - 1] = input[CCD_PIXEL_COUNT - 1];
 }
@@ -107,9 +111,57 @@ void tsp_ccd_image_dilate(const ccd_t input, ccd_t output)
     for (uint16_t i = 1; i < CCD_PIXEL_COUNT - 1; i++) {
         if(input[i-1] == 0xFF && input[i+1] == 0xFF)
             output[i] = 0xFF;
+        else output[i] = input[i]; // 保留原像素值
     }
     output[CCD_PIXEL_COUNT - 1] = input[CCD_PIXEL_COUNT - 1];
 }
+
+void tsp_ccd_detect_scene(const ccd_t input){
+    int16_t first_black = -1, last_black = -1;
+    uint8_t gte_l, gte_r;
+    // 找第一和最后一个黑像素
+    gte_l = RESET;
+    gte_r = RESET;
+    for(uint16_t i=5; i<(CCD_PIXEL_COUNT-5); i++)
+    {
+        if((gte_l == RESET) && ((255 == input[i])||i==5) && (0 == input[i+1]))
+        {
+            gte_l= SET; // 左边缘找到
+            first_black = i;
+        }
+        else if((gte_l == SET) && (0 == input[i]) && ((255 == input[i+1])|| i == (CCD_PIXEL_COUNT - 6)))
+        {
+            gte_r = SET; // 右边缘找到
+            last_black = i;
+            break; // 找到最后一个黑像素后退出循环
+        }
+    }
+    // // 没扫到线，当成直线/小弯道
+    // if (first_black < 0 || last_black < 0) {
+
+    //     return ;
+    // }
+    if(first_black < 0 || last_black == (CCD_PIXEL_COUNT - 6)) {
+        BUZZ_ON();
+        //tsp_tft18_show_str(0, 2, "Zhijiao");
+        return ;
+    }
+    uint16_t width = last_black - first_black + 1;
+    float pct = (float)width / (float)CCD_PIXEL_COUNT;
+    if (pct >= 0.8) {
+        //tsp_tft18_show_str(0, 2, "Shizi");
+        return ;
+    } 
+    // else if (pct >= 0.35 && pct < 0.8) {
+    //     tsp_tft18_show_str(0, 4, "Zhijiao");
+    //     return ;}
+     else {
+        //tsp_tft18_show_str(0, 2, "Zhixian");
+        return ;
+    }
+}
+
+
 
 uint16_t tloss = 0;
 void tsp_find_mid_line(const ccd_t input, uint8_t *mid_idx){
@@ -175,11 +227,13 @@ void tsp_img_test(void){
 			tsp_ccd_data2Gray(ccd_data, ccd_data_gray);
             uint16_t threshold = tsp_ccd_threshold_mean(ccd_data_gray);
             //threshold = RES_value; // 使用旋转编码器的值作为阈值
+            //if(threshold > 200) {threshold = 20; RES_value = 20;} // 限制阈值范围
 			tsp_ccd_binary(ccd_data_gray, ccd_data_binary, threshold);
             tsp_tft18_show_uint16(0, 1, threshold);
-            //tsp_ccd_image_erode(ccd_data_binary, ccd_data_temp);
-            //tsp_ccd_image_dilate(ccd_data_binary, ccd_data_show);
-			tsp_show1_ccd_gray(ccd_data_binary);
+            tsp_ccd_image_erode(ccd_data_binary, ccd_data_temp);
+            tsp_ccd_detect_scene(ccd_data_temp);
+            tsp_ccd_image_dilate(ccd_data_binary, ccd_data_show);
+			tsp_show1_ccd_gray(ccd_data_temp);
             //tsp_show2_ccd_gray(ccd_data_show);
         }
         delay_1ms(100);

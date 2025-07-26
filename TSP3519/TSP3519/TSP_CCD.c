@@ -164,5 +164,7 @@ void CCD_test(void)
 			tsp_ccd_show(ccd_data_raw);
         }
         delay_1ms(100);
+        if(S0()) break;
     }
+    while(S0()) {}
 }

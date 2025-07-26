@@ -27,6 +27,8 @@
 #include "tsp_motor.h"
 #include "tsp_servo.h"
 #include "tsp_ccd_image.h"
+#include "tsp_menu.h"
+#include "Kalman.h"
 
 //===================================================用户自定义文件===================================================
 
