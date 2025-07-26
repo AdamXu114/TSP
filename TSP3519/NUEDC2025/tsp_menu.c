@@ -22,14 +22,7 @@ uint8_t menu_item0[8][20]=
 {
 	"1.OpenLoop",
 	"2.CloseLoop",
-	// "1.SmartCarDemo",
-	// "2.ImageProcess",
-	// "3.Servo-Manual",
-	// "4.Motor-Manual",
-	// "5.SpdCloseLoop",
-	// "6.E-Gradienter",
-	// "7.RemoteContrl",
-	// "8.SpeedSetting",
+	"3.ParaSet"
 };
 
 // extern float kp_motor = 1.0f; // 电机控制的比例系数
@@ -49,7 +42,7 @@ uint8_t tsp_menu_loop(void)
     
 	tsp_tft18_show_str(32, 0, menu_item0[0]);
 	tsp_tft18_show_str(32, 1, menu_item0[1]);
-	// tsp_tft18_show_str(32, 2, menu_item0[2]);
+	tsp_tft18_show_str(32, 2, menu_item0[2]);
 	// tsp_tft18_show_str(32, 3, menu_item0[3]);
 	// tsp_tft18_show_str(32, 4, menu_item0[4]);
 	// tsp_tft18_show_str(32, 5, menu_item0[5]);
@@ -150,7 +143,7 @@ void para_set()
 	tsp_tft18_clear(BLACK);
 	tsp_tft18_set_region(0, 0, TFT_X_MAX-1, TFT_Y_MAX-1);
 	tsp_tft18_show_str_color(0, 0, "-Smartcar PID Demo--", BLUE, YELLOW);
-	tsp_tft18_show_str(16, 1, "TargetV:");
+	tsp_tft18_show_str(24, 1, "TargetV:");
 	tsp_tft18_show_str(24, 2, "Kp: ");
 	tsp_tft18_show_str(24, 3, "Ki: ");
 	tsp_tft18_show_str(24, 4, "Kd: ");
@@ -207,17 +200,26 @@ void para_set()
 		{
 			switch(item)
 			{
+			case 0:
+				tsp_tft18_show_str(0, 1, "->");
+				tsp_tft18_show_str(0, 2, "  ");
+				tsp_tft18_show_str(0, 3, "  ");
+				tsp_tft18_show_str(0, 4, "  ");
+				break;
 			case 1:
+				tsp_tft18_show_str(0, 1, "  ");
 				tsp_tft18_show_str(0, 2, "->");
 				tsp_tft18_show_str(0, 3, "  ");
 				tsp_tft18_show_str(0, 4, "  ");
 				break;
 			case 2:
+				tsp_tft18_show_str(0, 1, "  ");
 				tsp_tft18_show_str(0, 2, "  ");
 				tsp_tft18_show_str(0, 3, "->");
 				tsp_tft18_show_str(0, 4, "  ");
 				break;
 			case 3:
+				tsp_tft18_show_str(0, 1, "  ");
 				tsp_tft18_show_str(0, 2, "  ");
 				tsp_tft18_show_str(0, 3, "  ");
 				tsp_tft18_show_str(0, 4, "->");
@@ -231,6 +233,8 @@ void para_set()
 		change = 0;
 		if ((jStatusPHA!=StatusPHA) && (RESET==StatusPHA))
 		{
+			sprintf(value_str, "change: %d", change);
+			tsp_tft18_show_str(0, 6, value_str);
 			if (SET == StatusPHB) 		// CW to increase
 			{
 					change = 1;
@@ -246,6 +250,19 @@ void para_set()
 		
 		switch(item)
 		{
+		case 0:		// Speed
+			if(change == 1)
+			{
+				speed += 1;
+            if(speed > 40)
+			speed = 40;
+			}
+			else if(change == 2)
+			{
+				if(speed > 5 )
+				speed -= 1;
+			}
+			break;
 		case 1:		// Kp
 			if(change == 1)
 			{
@@ -301,13 +318,13 @@ void para_set()
 			tsp_tft18_show_str(88, 4, value_str);
 		}
 
-		if(!PUSH())
+		if(S0())
 		{
 			tsp_tft18_show_str(0, 2, "  ");
 			tsp_tft18_show_str(0, 3, "  ");
 			tsp_tft18_show_str(0, 4, "  ");
 			break;
-         while(!PUSH()) {}
+         while(S0()) {}
 		}
 	}
 }

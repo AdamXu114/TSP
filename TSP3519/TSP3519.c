@@ -87,6 +87,7 @@ int main(void)
 				tsp_img_test();	
 			    break;
 			case 2U:
+				para_set();
 				break;
 			default:break;
 		}
