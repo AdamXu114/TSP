@@ -2,24 +2,18 @@
 #include "TSP_CCD.h"
 
 ccd_t ccd_data_raw, ccd_data_old; // CCD 数据缓存
+uint8_t ccd_index;
 // 简单空循环延时，80 次大约 1μs（80MHz 时钟）
-void tsp_ccd_delay(void)
+void tsp_ccd_delay_1us(uint8_t us)
 {
-    volatile uint16_t cnt = 80;
+    volatile uint16_t cnt = 80 * us; // 1μs 延时
     while (cnt--) { asm("NOP"); }
 }
 
+
 void tsp_ccd_init(void)
 {
-    // 底层外设初始化（GPIO 时钟、多路复用、ADC）
-    //SYSCFG_DL_init();  
-    ADC_Init();
-
-    // 配置 SI、CLK 引脚为数字输出
-    // DL_GPIO_initDigitalOutput(PORTC_CCD_SI1_IOMUX);
-    // DL_GPIO_initDigitalOutput(PORTC_CCD_SI2_IOMUX);  // 若使用双 SI
-    // DL_GPIO_initDigitalOutput(PORTB_CCD_CLK1_IOMUX);
-    // DL_GPIO_initDigitalOutput(PORTC_CCD_CLK2_IOMUX); // 若使用双 TAP
+    NVIC_EnableIRQ(ADC1_INT_IRQn); // enable ADC interrupt
 }
 
 /** 仅拉一次 SI 脉冲，复位电荷 */
@@ -28,7 +22,7 @@ static void tsp_ccd_trigger_SI(void)
     // SI = 1
     CCD_SI1_HIGH;
     CCD_SI2_HIGH;
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
     // SI = 0
     CCD_SI1_LOW;
     CCD_SI2_LOW;
@@ -39,27 +33,35 @@ static void tsp_ccd_pulse_CLK(void)
 {
     CCD_CLK1_HIGH;
     CCD_CLK2_HIGH;
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
     CCD_CLK1_LOW;
     CCD_CLK2_LOW;
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
 }
 
 void tsp_ccd_flush(void)
 {
     // 1. 复位脉冲
     CCD_CLK1_HIGH;CCD_CLK2_HIGH;
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
     CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉高 SI2
-    tsp_ccd_delay();
-    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(2);
+
     CCD_CLK1_LOW;CCD_CLK2_LOW; // 若使用双 TAP，则同时拉低 CLK2
-    tsp_ccd_delay();
-    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉高 CLK2
-    tsp_ccd_delay();
-    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉低 SI2
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
+    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay_1us(30);
+
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉低 CLK2
+    tsp_ccd_delay_1us(1);
+    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay_1us(2);
+    
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉低 CLK2
+    tsp_ccd_delay_1us(1);
+    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay_1us(2);
+    
     // 3. 再来 128 个时钟，丢弃管脚上的电荷输出
     for (uint16_t i = 0; i < CCD_PIXEL_COUNT; i++) {
         tsp_ccd_pulse_CLK();
@@ -78,30 +80,37 @@ bool tsp_ccd_snapshot(ccd_t buf)
 
     // 3) 触发 SI, CLK 初始脉冲，开始读第 0 像素
     CCD_CLK1_HIGH;CCD_CLK2_HIGH;
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
     CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉高 SI2
-    tsp_ccd_delay();
-    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(2);
+
     CCD_CLK1_LOW;CCD_CLK2_LOW; // 若使用双 TAP，则同时拉低 CLK2
-    tsp_ccd_delay();
-    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉高 CLK2
-    tsp_ccd_delay();
-    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉低 SI2
-    tsp_ccd_delay();
+    tsp_ccd_delay_1us(1);
+    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay_1us(3);
+
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉低 CLK2
+    tsp_ccd_delay_1us(1);
+    CCD_SI1_HIGH;CCD_SI2_HIGH; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay_1us(2);
+    
+    CCD_CLK1_HIGH;CCD_CLK2_HIGH; // 若使用双 TAP，则同时拉低 CLK2
+    tsp_ccd_delay_1us(1);
+    CCD_SI1_LOW;CCD_SI2_LOW; // 若使用双 SI，则同时拉高 SI2
+    tsp_ccd_delay_1us(2);
 
     // 4) 依次读出 CCD_PIXEL_COUNT 个像素
     for (uint16_t i = 0; i < CCD_PIXEL_COUNT; i++) {
         // 下降沿
         CCD_CLK1_LOW;CCD_CLK2_LOW;
-        tsp_ccd_delay();
+        tsp_ccd_delay_1us(1);
         // 读 ADC
         CCD1_Get_AO(&val);
         buf[i] = val;
 
         // 上升沿出电荷,为下一像素做准备
         CCD_CLK1_HIGH;CCD_CLK2_HIGH;
-        tsp_ccd_delay();
+        tsp_ccd_delay_1us(1);
     }
 
     // 5) 额外再打一拍 CLK 以终止输出
@@ -125,9 +134,9 @@ void tsp_ccd_show(ccd_t data)
 
 void tsp_demo_frame_ccd(void)
 {
-    tsp_tft18_show_str_color(1, 0, "ExpT:       Max:    ", WHITE, BLACK);
-    tsp_tft18_show_str_color(1, 1, "Mode:       Min:    ", WHITE, BLACK);
-    tsp_tft18_show_str_color(1, 2, "            Avg:    ", WHITE, BLACK);
+    //tsp_tft18_show_str_color(1, 0, "ExpT:       Max:    ", WHITE, BLACK);
+    //tsp_tft18_show_str_color(1, 1, "Mode:       Min:    ", WHITE, BLACK);
+    //tsp_tft18_show_str_color(1, 2, "            Avg:    ", WHITE, BLACK);
 
     // window for TSL1401 waveform
     tsp_tft18_draw_frame(31, 64, 128, 64, BLUE);
@@ -137,8 +146,7 @@ void tsp_demo_frame_ccd(void)
 
 void CCD_test(void)
 {
-  	uint8_t index;
-	uint16_t count = 0;
+
   	// initialize LCD
 	// hsp_spi_init();
 	// hsp_tft18_init();
@@ -147,10 +155,8 @@ void CCD_test(void)
 	// initialize ADC/CCD
 	tsp_ccd_init();
 	tsp_demo_frame_ccd();
-    NVIC_EnableIRQ(ADC1_INT_IRQn); // enable ADC interrupt
-
-	for(index=0; index<128; index++)
-		ccd_data_raw[index] = (index<<5);
+    for(ccd_index=0; ccd_index<128; ccd_index++)
+		ccd_data_raw[ccd_index] = (ccd_index<<5);
 	tsp_ccd_show(ccd_data_raw);
 	while(1)
 	{
@@ -158,7 +164,5 @@ void CCD_test(void)
 			tsp_ccd_show(ccd_data_raw);
         }
         delay_1ms(100);
-        tsp_tft18_show_uint16(80, 3, count++);
     }
-	
 }

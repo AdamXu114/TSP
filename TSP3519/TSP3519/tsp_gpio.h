@@ -4,6 +4,7 @@
 #include "ti_msp_dl_config.h"
 #include "tsp_common_headfile.h"
 
+typedef enum {RESET = 0, SET = !RESET} FlagStatus; // 定义标志位类型
 // GPIO inputs on system board
 // S0 - PA18/BSL  (rename S1 to S0)
 #define S0()				DL_GPIO_readPins(PORTA_PORT, PORTA_S0_PIN)

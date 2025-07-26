@@ -63,12 +63,13 @@ int main(void)
 	SYSCFG_DL_init();
 	
 	//DL_FlashCTL_executeClearStatus();
-	//Enable_GPIOA_INT();
+	Enable_GPIOA_INT();
 	tsp_tft18_init();
 	//tsp_tft18_test_color();
 	tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
     //MPU6050_Init();
-    CCD_test();
+    //CCD_test();
+	tsp_img_test();
 	//Motor_test();
 	while (1) {
 		float rpy[3];

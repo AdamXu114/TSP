@@ -26,7 +26,7 @@
 #include "tsp_isr.h"
 #include "tsp_motor.h"
 #include "tsp_servo.h"
-
+#include "tsp_ccd_image.h"
 
 //===================================================用户自定义文件===================================================
 

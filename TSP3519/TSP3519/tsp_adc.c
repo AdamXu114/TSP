@@ -7,7 +7,7 @@ volatile uint16_t ADC_value = 0; // ADC value
  */
 void ADC_Init(void) {//已经在SYSCFG_DL_init中调用，不需要单独调用
     // Initialize ADC sequence sampling for CCD
-    DL_ADC12_startConversion(DL_ADC12_MEM_IDX_0);
+    
 }
 
 /**
@@ -18,9 +18,12 @@ void ADC_Init(void) {//已经在SYSCFG_DL_init中调用，不需要单独调用
 //  */
 
 int CCD1_Get_AO(uint16_t *value){
-    //while(!ADC_flag); // Wait for ADC conversion to complete
+    DL_ADC12_startConversion(CCD_INST); // Start ADC conversion
+    
+    while(!ADC_flag); // Wait for ADC conversion to complete
     ADC_flag = false; // Reset flag
     *value = DL_ADC12_getMemResult(CCD_INST,DL_ADC12_MEM_IDX_0);    //12bit, 0-4095
+    DL_ADC12_enableConversions(CCD_INST); // Enable further conversions
 }
 int CCD2_Get_AO(uint16_t *value){
     return ADC_ReadValue(DL_ADC12_MEM_IDX_1,value);

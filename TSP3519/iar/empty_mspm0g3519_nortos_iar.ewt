@@ -1488,6 +1488,12 @@
     <group>
         <name>NUEDU2025</name>
         <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_ccd_image.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_ccd_image.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_isr.c</name>
         </file>
         <file>
