@@ -49,6 +49,10 @@ float speed = 0.0f; // 目标速度
 float kp_turn_motor = 1.0f; // 原地转向电机控制的比例系数
 float ki_turn_motor = 0.0f;
 float kd_turn_motor = 0.0f; // 原地转向电机控制的微分系数
+int16_t encoder_pulse_qei1;
+int16_t encoder_pulse_qei2;
+int16_t encoder_speed_qei1;
+int16_t encoder_speed_qei2;
 
 float kp_angle_to_err = 1.0f; // 角度转误差的比例系数
 uint8_t flag_20_ms = 0; // 用于标记 20 ms 周期

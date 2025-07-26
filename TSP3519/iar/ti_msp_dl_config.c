@@ -348,19 +348,19 @@ SYSCONFIG_WEAK void SYSCFG_DL_Servo_init(void) {
 
 }
 /*
- * Timer clock configuration to be sourced by  / 4 (20000000 Hz)
+ * Timer clock configuration to be sourced by  / 8 (10000000 Hz)
  * timerClkFreq = (timerClkSrc / (timerClkDivRatio * (timerClkPrescale + 1)))
- *   200000 Hz = 20000000 Hz / (4 * (99 + 1))
+ *   1000000 Hz = 10000000 Hz / (8 * (9 + 1))
  */
 static const DL_TimerA_ClockConfig gMotorClockConfig = {
     .clockSel = DL_TIMER_CLOCK_BUSCLK,
-    .divideRatio = DL_TIMER_CLOCK_DIVIDE_4,
-    .prescale = 99U
+    .divideRatio = DL_TIMER_CLOCK_DIVIDE_8,
+    .prescale = 9U
 };
 
 static const DL_TimerA_PWMConfig gMotorConfig = {
-    .pwmMode = DL_TIMER_PWM_MODE_EDGE_ALIGN_UP,
-    .period = 4000,
+    .pwmMode = DL_TIMER_PWM_MODE_EDGE_ALIGN,
+    .period = 100,
     .isTimerWithFourCC = true,
     .startTimer = DL_TIMER_START,
 };
@@ -381,28 +381,28 @@ SYSCONFIG_WEAK void SYSCFG_DL_Motor_init(void) {
 		DL_TIMERA_CAPTURE_COMPARE_0_INDEX);
 
     DL_TimerA_setCaptCompUpdateMethod(Motor_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERA_CAPTURE_COMPARE_0_INDEX);
-    DL_TimerA_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_0_INDEX);
+    DL_TimerA_setCaptureCompareValue(Motor_INST, 100, DL_TIMER_CC_0_INDEX);
 
     DL_TimerA_setCaptureCompareOutCtl(Motor_INST, DL_TIMER_CC_OCTL_INIT_VAL_LOW,
 		DL_TIMER_CC_OCTL_INV_OUT_DISABLED, DL_TIMER_CC_OCTL_SRC_FUNCVAL,
 		DL_TIMERA_CAPTURE_COMPARE_1_INDEX);
 
     DL_TimerA_setCaptCompUpdateMethod(Motor_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERA_CAPTURE_COMPARE_1_INDEX);
-    DL_TimerA_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_1_INDEX);
+    DL_TimerA_setCaptureCompareValue(Motor_INST, 100, DL_TIMER_CC_1_INDEX);
 
     DL_TimerA_setCaptureCompareOutCtl(Motor_INST, DL_TIMER_CC_OCTL_INIT_VAL_LOW,
 		DL_TIMER_CC_OCTL_INV_OUT_DISABLED, DL_TIMER_CC_OCTL_SRC_FUNCVAL,
 		DL_TIMERA_CAPTURE_COMPARE_2_INDEX);
 
     DL_TimerA_setCaptCompUpdateMethod(Motor_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERA_CAPTURE_COMPARE_2_INDEX);
-    DL_TimerA_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_2_INDEX);
+    DL_TimerA_setCaptureCompareValue(Motor_INST, 100, DL_TIMER_CC_2_INDEX);
 
     DL_TimerA_setCaptureCompareOutCtl(Motor_INST, DL_TIMER_CC_OCTL_INIT_VAL_LOW,
 		DL_TIMER_CC_OCTL_INV_OUT_DISABLED, DL_TIMER_CC_OCTL_SRC_FUNCVAL,
 		DL_TIMERA_CAPTURE_COMPARE_3_INDEX);
 
     DL_TimerA_setCaptCompUpdateMethod(Motor_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERA_CAPTURE_COMPARE_3_INDEX);
-    DL_TimerA_setCaptureCompareValue(Motor_INST, 0, DL_TIMER_CC_3_INDEX);
+    DL_TimerA_setCaptureCompareValue(Motor_INST, 100, DL_TIMER_CC_3_INDEX);
 
     DL_TimerA_enableClock(Motor_INST);
 

@@ -109,7 +109,7 @@ extern "C" {
 #define Motor_INST                                                         TIMA0
 #define Motor_INST_IRQHandler                                   TIMA0_IRQHandler
 #define Motor_INST_INT_IRQN                                     (TIMA0_INT_IRQn)
-#define Motor_INST_CLK_FREQ                                               200000
+#define Motor_INST_CLK_FREQ                                              1000000
 /* GPIO defines for channel 0 */
 #define GPIO_Motor_C0_PORT                                                 GPIOB
 #define GPIO_Motor_C0_PIN                                          DL_GPIO_PIN_3
