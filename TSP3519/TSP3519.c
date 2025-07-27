@@ -60,23 +60,34 @@ uint8_t flag_20_ms = 0; // 用于标记 20 ms 周期
 uint8_t RES_value = 0; // 旋转编码器的值
 int16_t gz = 0; // 陀螺仪 Z 轴数据
 volatile uint8_t pha = 0,phb = 0; // 编码器的相位 A 和 B
+void Board_init(void){
+	//DL_FlashCTL_executeClearStatus();
+
+	//外设初始化函数
+	tsp_tft18_init();
+	MPU6050_Init();
+	
+    //中断初始化函数
+	Enable_GPIOA_INT();
+
+	//测试函数，内部包含死循环，用于测试外设是否正常工作
+    //CCD_test();
+	//tsp_img_test();
+	//Motor_test();
+
+
+	//tsp_tft18_test_color();
+	//tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
+}
 //---------------------------------------------主函数---------------------------------------------------//
 int main(void)
 {
 	uint32_t count=0;
-	
+
+	//系统配置初始化
 	SYSCFG_DL_init();
+	Board_init();
 	
-	//DL_FlashCTL_executeClearStatus();
-	Enable_GPIOA_INT();
-	tsp_tft18_init();
-	//tsp_tft18_test_color();
-	tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
-	delay_1ms(1000);
-    MPU6050_Init();
-    //CCD_test();
-	//tsp_img_test();
-	//Motor_test();
 	while(1) {
 		menu_id = tsp_menu_loop();
 		switch(menu_id){
@@ -93,6 +104,7 @@ int main(void)
 		}
 		while(S0()) {}	// wait until S3 released
 	}
+
 	while (1) {
 		float rpy[3];
 		if(S0())
@@ -109,7 +121,6 @@ int main(void)
         if(flag_20_ms) {
             flag_20_ms = 0; // 清除标志
             MPU6050GetRPY(&rpy[0], &rpy[1], &rpy[2]);
-			//Angle_Calcu();
         }
         
 		char buf[64];
@@ -119,9 +130,6 @@ int main(void)
         tsp_tft18_show_str(0, 2, buf);
         sprintf(buf, "Yaw: %.2f", rpy[2]);
         tsp_tft18_show_str(0, 3, buf);
-		// tsp_tft18_show_uint8(80,6, pha);
-		// tsp_tft18_show_uint8(80,7, phb);
 		tsp_tft18_show_uint16(0, 7, RES_value);
-        // tsp_tft18_show_uint16(0, 5, count++);
 	}	
 }
