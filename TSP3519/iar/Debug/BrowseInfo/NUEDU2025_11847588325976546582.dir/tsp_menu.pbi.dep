@@ -1,5 +1,6 @@
-D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_13168490636323535303.dir\TSP3519.pbi: \
-  D:\Study_resources\鐢佃禌\TSP\TSP3519\TSP3519.c \
+D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\NUEDU2025_11847588325976546582.dir\tsp_menu.pbi: \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\NUEDC2025\tsp_menu.c \
+  D:\Study_resources\鐢佃禌\TSP\TSP3519\NUEDC2025\tsp_menu.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\tsp_common_headfile.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\stdio.h \
   D:\iar\ewarm-9.60.3\arm\inc\c\ycheck.h \
@@ -105,10 +106,10 @@ D:\Study_resources\电赛\TSP\TSP3519\iar\Debug\BrowseInfo\empty_mspm0g3519_131684
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_MPU6050.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_TFT18.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_CCD.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_isr.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_motor.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_servo.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_ccd_image.h \
+  D:\Study_resources\电赛\TSP\TSP3519\NUEDC2025\tsp_isr.h \
+  D:\Study_resources\电赛\TSP\TSP3519\NUEDC2025\tsp_motor.h \
+  D:\Study_resources\电赛\TSP\TSP3519\NUEDC2025\tsp_servo.h \
+  D:\Study_resources\电赛\TSP\TSP3519\NUEDC2025\tsp_ccd_image.h \
   D:\Study_resources\电赛\TSP\TSP3519\iar\..\TSP3519\TSP_CCD.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\tsp_menu.h \
-  D:\Study_resources\电赛\TSP\TSP3519\iar\..\NUEDC2025\Kalman.h
+  D:\Study_resources\电赛\TSP\TSP3519\NUEDC2025\tsp_menu.h \
+  D:\Study_resources\电赛\TSP\TSP3519\NUEDC2025\Kalman.h

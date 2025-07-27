@@ -9,11 +9,12 @@ static float yaw = 0;
 static float pitch = 0;
 static float roll = 0;
 static float gyro_bias[3] = {8.0f, -18.0f, 35.0f};  // 零偏估计值
+static float acc_bias[3] = {420.0f, -606.0f, 0.0f};  // 零偏估计值
 
 float gz_filtered = 0;
 float prev_input = 0, prev_output = 0;
 float alpha = 0.98f; // 越小保留高频越多
-
+uint32_t current_time = 0, last_time = 0;
 float HighPassFilter(float input)
 {
     float output = alpha * (prev_output + input - prev_input);
@@ -91,9 +92,11 @@ void MPU6050_Init(void)
 	MPU6050_WriteReg(MPU6050_ACCEL_CONFIG, 0x18);	//加速度计配置寄存器，选择满量程为±16g
     delay_1ms(200);
     for(int i = 0; i < 100; i++) {
-        short gyro[3];
+        short gyro[3],acc[3];
         MPU6050ReadGyro(gyro);
+        MPU6050ReadAcc(acc);
         gyro_bias_update(gyro);
+        acc_bias_update(acc);
         delay_1ms(10);
     }
 }
@@ -107,6 +110,16 @@ void MPU6050ReadAcc(short *accData)
     accData[2] = ((buf[4] << 8) | buf[5]) ;
 }
 
+void Get_Acc(float *accData){
+    short acc[3];
+    MPU6050ReadAcc(acc);
+    float accx = (acc[0] - acc_bias[0])/ ACCSENSITIVITY;
+    float accy = (acc[1] - acc_bias[1])/ ACCSENSITIVITY;
+    float accz = (acc[2])/ ACCSENSITIVITY;
+    accData[0] = accx * ACC_SCALE;
+    accData[1] = accy * ACC_SCALE;
+    accData[2] = accz * ACC_SCALE;
+}
 // 函数：MPU6050ReadGyro
 // 功能：读取MPU6050的陀螺仪数据
 // 参数：gyroData：陀螺仪数据
@@ -119,6 +132,17 @@ void MPU6050ReadGyro(short *gyroData)
     gyroData[1] = ((buf[2] << 8) | buf[3]);
     gyroData[2] = ((buf[4] << 8) | buf[5]); 
 }
+void Get_Gyro(float *gyroData){
+    short gyro[3];
+    MPU6050ReadGyro(gyro);
+    float gyrox = (gyro[0] - gyro_bias[0])/ GYROSENSITIVITY;
+    float gyroy = (gyro[1] - gyro_bias[1])/ GYROSENSITIVITY;
+    float gyroz = (gyro[2] - gyro_bias[2])/ GYROSENSITIVITY;
+    gyroData[0] = gyrox * GYRO_SCALE;
+    gyroData[1] = gyroy * GYRO_SCALE;
+    gyroData[2] = gyroz * GYRO_SCALE;
+
+}
 void gyro_bias_update(short *gyroData){
     
     gyro_bias[0] += ((float)gyroData[0] - gyro_bias[0]) / 20;
@@ -126,33 +150,59 @@ void gyro_bias_update(short *gyroData){
     gyro_bias[2] += ((float)gyroData[2] - gyro_bias[2]) / 20;
 
 }
+void acc_bias_update(short *accData){
+    
+    acc_bias[0] += ((float)accData[0] - acc_bias[0]) / 20;
+    acc_bias[1] += ((float)accData[1] - acc_bias[1]) / 20;
+    //acc_bias[2] += ((float)accData[2] - acc_bias[2]) / 20;//z轴不需要更新，以此为基准9.8g
 
+}
 void RPY_Update(void)
 {
     //使用积分来更新rpy
-    short gyrodata[3] = {0};
-
-    // 1) 读取原始陀螺仪数据（MPU6050ReadGyro 已在你的库里实现）
-    
-    MPU6050ReadGyro(gyrodata);
-    //gyro_bias_update(gyrodata);
-    // 2) 转换成角速度 (°/s)
-    float gx = (gyrodata[0]-gyro_bias[0]) / GYROSCALE;
-    float gy = (gyrodata[1]-gyro_bias[1]) / GYROSCALE;
-    float gz = (gyrodata[2]-gyro_bias[2]) / GYROSCALE;
-    gz_filtered = HighPassFilter(gz);
-
+    float gyrodata[3];
+    Get_Gyro(gyrodata);
+    float gx = HighPassFilter(gyrodata[0]);
+    float gy = HighPassFilter(gyrodata[1]);
+    //float gz = HighPassFilter(gyrodata[2]);
+    float gz = gyrodata[2];
+    current_time = get_systick_counter();
+    uint8_t dur = (current_time - last_time);
+    last_time = current_time;
     // 3) 纯积分更新
-    roll  += gx * DT;
-    pitch += gy * DT;
-    yaw   += gz * DT;
+    roll  += gx * dur /1000.0f;
+    pitch += gy * dur /1000.0f;
+    yaw   += gz * dur /1000.0f;
+    //tsp_tft18_show_uint8(0, 7, dur);
 }
 
 void MPU6050GetRPY(float *Roll, float *Pitch, float *Yaw)
 {
     RPY_Update(); // 更新RPY
-    *Roll  = roll / 63.7f * 90.0f;
-    *Pitch = pitch / 63.7f * 90.0f;
-    *Yaw   = yaw / 63.7f * 90.0f;
+    *Roll  = roll;
+    *Pitch = pitch;
+    *Yaw   = yaw;
 }
 
+
+void mpu_test(void){
+    short gyro_origin[3],acc_origin[3];
+    float gyro[3],acc[3];
+    while(1){
+        MPU6050ReadGyro(gyro_origin);
+        MPU6050ReadAcc(acc_origin);
+        Get_Acc(acc);
+        Get_Gyro(gyro);
+        char buf[50];
+        sprintf(buf,"gyro: %d %d %d",gyro_origin[0],gyro_origin[1],gyro_origin[2]);
+        tsp_tft18_show_str(0,0,buf);
+        sprintf(buf,"acc: %d %d %d",acc_origin[0],acc_origin[1],acc_origin[2]);
+        tsp_tft18_show_str(0,1,buf);
+        sprintf(buf,"gyro: %.1f %.1f %.1f",gyro[0],gyro[1],gyro[2]);
+        tsp_tft18_show_str(0,2,buf);
+        sprintf(buf,"acc: %.2f %.2f %.2f",acc[0],acc[1],acc[2]);
+        tsp_tft18_show_str(0,3,buf);
+        if(S0()) break;
+    }
+    while(S0()){};
+}

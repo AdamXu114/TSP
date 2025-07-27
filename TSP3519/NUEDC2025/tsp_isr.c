@@ -8,7 +8,7 @@ extern uint16_t rx_idx;
 extern uint8_t rx_flag;
 extern uint8_t RES_value;
 extern uint8_t change;
-
+extern uint16_t count_20ms;
 extern int16_t encoder_pulse_qei1;
 extern int16_t encoder_pulse_qei2;
 extern int16_t encoder_speed_qei1;
@@ -22,6 +22,7 @@ void delay_1ms(uint32_t count)
 void SysTick_Handler()
 {
 	sys_tick_counter++;
+	count_20ms++;
 	if(0U != delay) {
 		delay--;
 	}

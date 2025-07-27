@@ -45,7 +45,7 @@ float kd_motor = 0.0f; // 电机控制的微分系数
 float kp_servo = 0.0f; // 舵机控制的比例系数
 float ki_servo = 0.0f;
 float kd_servo = 0.0f; // 舵机控制的微分系数
-float speed = 0.0f; // 目标速度
+uint8_t speed = 0; // 目标速度
 
 float kp_turn_motor = 1.0f; // 原地转向电机控制的比例系数
 float ki_turn_motor = 0.0f;
@@ -60,6 +60,7 @@ uint8_t flag_20_ms = 0; // 用于标记 20 ms 周期
 uint8_t RES_value = 0; // 旋转编码器的值
 int16_t gz = 0; // 陀螺仪 Z 轴数据
 volatile uint8_t pha = 0,phb = 0; // 编码器的相位 A 和 B
+uint16_t count_20ms = 0;
 void Board_init(void){
 	//DL_FlashCTL_executeClearStatus();
 
@@ -74,7 +75,7 @@ void Board_init(void){
     //CCD_test();
 	//tsp_img_test();
 	//Motor_test();
-
+	//mpu_test();
 
 	//tsp_tft18_test_color();
 	//tsp_tft18_show_str_color(0, 0, "NUEDC-2025 SAIS@SJTU", BLUE, YELLOW);
@@ -104,8 +105,9 @@ int main(void)
 		}
 		while(S0()) {}	// wait until S3 released
 	}
-
+	char buf[64];
 	while (1) {
+		
 		float rpy[3];
 		if(S0())
 			LED_ON();
@@ -116,20 +118,20 @@ int main(void)
 			BUZZ_ON();
 		else
 			BUZZ_OFF();
-		
-		float tmp = 0.0f;
         if(flag_20_ms) {
-            flag_20_ms = 0; // 清除标志
-            MPU6050GetRPY(&rpy[0], &rpy[1], &rpy[2]);
+            flag_20_ms = 0; // 清除标志tsp_tft18_show_uint16(0, 6, count_20ms);
+			//tsp_tft18_show_uint16(0, 6, count_20ms);
+			count_20ms = 0;
+            // MPU6050GetRPY(&rpy[0], &rpy[1], &rpy[2]);
+			// sprintf(buf, "Roll: %.2f", rpy[0]);
+			// tsp_tft18_show_str(0, 1, buf);
+			// sprintf(buf, "Pitch: %.2f", rpy[1]);
+			// tsp_tft18_show_str(0, 2, buf);
+			// sprintf(buf, "Yaw: %.2f", rpy[2]);
+			// tsp_tft18_show_str(0, 3, buf);
+			//Angle_Calcu();
         }
         
-		char buf[64];
-        sprintf(buf, "Roll: %.2f", rpy[0]);
-        tsp_tft18_show_str(0, 1, buf);
-        sprintf(buf, "Pitch: %.2f", rpy[1]);
-        tsp_tft18_show_str(0, 2, buf);
-        sprintf(buf, "Yaw: %.2f", rpy[2]);
-        tsp_tft18_show_str(0, 3, buf);
 		tsp_tft18_show_uint16(0, 7, RES_value);
 	}	
 }

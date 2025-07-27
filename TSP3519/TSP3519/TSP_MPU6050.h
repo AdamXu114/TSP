@@ -29,8 +29,10 @@
 #define	MPU6050_WHO_AM_I		0x75
 
 #define RAD2DEG (180.0f / 3.1415926f)
-#define ACCSCALE 2048.0f // 加速度计满量程 ±2g
-#define GYROSCALE 16.4f // 陀螺仪满量程 ±250°/s
+#define ACCSENSITIVITY 2048.0f // 加速度计满量程 ±2g
+#define GYROSENSITIVITY 16.4f // 陀螺仪满量程 ±250°/s
+#define ACC_SCALE 9.80665f / 0.8f // 加速度计刻度，用于矫正
+#define GYRO_SCALE 90.0f / 94.4f  // 陀螺仪刻度,用于矫正
 
 int MPU6050_WriteReg(uint8_t reg_add, uint8_t reg_dat);
 uint8_t MPU6050_ReadReg(uint8_t RegAddress);
@@ -39,7 +41,18 @@ uint8_t MPU6050ReadID(void);
 void MPU6050_Init(void);
 void MPU6050ReadAcc(short *accData);
 void MPU6050ReadGyro(short *gyroData);
-void MPU6050GetRPY(float *Roll, float *Pitch, float *Yaw);
+
 void gyro_bias_update(short *gyroData);
+void acc_bias_update(short *accData);
+
+//使用此函数来获取处理后的加速度数据
+void Get_Acc(float *accData);   
+//使用此函数来获取处理后的陀螺仪数据
+void Get_Gyro(float *gyroData);     
+
 float HighPassFilter(float input); //高通滤波器
+
+
+//使用此函数来获取姿态角
+void MPU6050GetRPY(float *Roll, float *Pitch, float *Yaw);  
 #endif /* TSP_MPU6050_H */

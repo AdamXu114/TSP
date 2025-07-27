@@ -237,5 +237,7 @@ void tsp_img_test(void){
             //tsp_show2_ccd_gray(ccd_data_show);
         }
         delay_1ms(100);
+        if(S0()) break;
     }
+    while(S0()) {}
 }

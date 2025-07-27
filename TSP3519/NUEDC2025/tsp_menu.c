@@ -31,10 +31,21 @@ uint8_t menu_item0[8][20]=
 // extern float kp_servo = 0.0f; // 舵机控制的比例系数
 // extern float ki_servo = 0.0f;
 // extern float kd_servo = 0.0f; // 舵机控制的微分系数
-extern float speed; // 目标速度
+extern uint8_t speed; // 目标速度
 extern uint8_t RES_value;
 uint8_t change=0;		// 0: no change; 1: increase; 2: decrease
 
+
+void tsp_show_arrow(uint8_t x){
+	tsp_tft18_show_str(0, 1, "  ");
+	tsp_tft18_show_str(0, 2, "  ");
+	tsp_tft18_show_str(0, 3, "  ");
+	tsp_tft18_show_str(0, 4, "  ");
+	tsp_tft18_show_str(0, 5, "  ");
+	tsp_tft18_show_str(0, 6, "  ");
+	tsp_tft18_show_str(0, 7, "  ");
+	tsp_tft18_show_str(0, x, "->");
+}
 uint8_t tsp_menu_loop(void)
 {
 	uint8_t ItemNumber=0;
@@ -142,16 +153,19 @@ void para_set()
 	tsp_tft18_set_region(0, 0, TFT_X_MAX-1, TFT_Y_MAX-1);
 	tsp_tft18_show_str_color(0, 0, "-Smartcar PID Demo--", BLUE, YELLOW);
 	tsp_tft18_show_str(24, 1, "TargetV:");
-	tsp_tft18_show_str(24, 2, "Kp: ");
-	tsp_tft18_show_str(24, 3, "Ki: ");
-	tsp_tft18_show_str(24, 4, "Kd: ");
+	tsp_tft18_show_str(32, 2, "Kp M: ");
+	tsp_tft18_show_str(32, 3, "Ki M: ");
+	tsp_tft18_show_str(32, 4, "Kd M: ");
+	tsp_tft18_show_str(32, 5, "Kp S: ");
+	tsp_tft18_show_str(32, 6, "Ki S: ");
+	tsp_tft18_show_str(32, 7, "Kd S: ");
 	
 	sprintf(value_str, "%03d", speed);
 	tsp_tft18_show_str(88, 1, value_str);
-	
+	tsp_tft18_show_str(0, 1, "->");
+
 	sprintf(value_str, "%0.1f", kp_motor);
 	tsp_tft18_show_str(88, 2, value_str);
-	tsp_tft18_show_str(0, 2, "->");
 
 	sprintf(value_str, "%0.1f", ki_motor);
 	tsp_tft18_show_str(88, 3, value_str);
@@ -159,6 +173,14 @@ void para_set()
 	sprintf(value_str, "%2.1f", kd_motor);
 	tsp_tft18_show_str(88, 4, value_str);
 
+	sprintf(value_str, "%0.1f", kp_servo);
+	tsp_tft18_show_str(88, 5, value_str);
+
+	sprintf(value_str, "%0.1f", ki_servo);
+	tsp_tft18_show_str(88, 6, value_str);
+
+	sprintf(value_str, "%2.1f", kd_servo);
+	tsp_tft18_show_str(88, 7, value_str);
 	item = item_t = 0;
 
 	while(1)
@@ -184,7 +206,7 @@ void para_set()
 			if (!S2())
 			{
 				Scroll = keyDOWN;
-				if(item<3)
+				if(item<6)
 				{
 				  item++;
 				  item_t = item;
@@ -197,28 +219,25 @@ void para_set()
 			switch(item)
 			{
 			case 0:
-				tsp_tft18_show_str(0, 1, "->");
-				tsp_tft18_show_str(0, 2, "  ");
-				tsp_tft18_show_str(0, 3, "  ");
-				tsp_tft18_show_str(0, 4, "  ");
+				tsp_show_arrow(1);
 				break;
 			case 1:
-				tsp_tft18_show_str(0, 1, "  ");
-				tsp_tft18_show_str(0, 2, "->");
-				tsp_tft18_show_str(0, 3, "  ");
-				tsp_tft18_show_str(0, 4, "  ");
+				tsp_show_arrow(2);
 				break;
 			case 2:
-				tsp_tft18_show_str(0, 1, "  ");
-				tsp_tft18_show_str(0, 2, "  ");
-				tsp_tft18_show_str(0, 3, "->");
-				tsp_tft18_show_str(0, 4, "  ");
+				tsp_show_arrow(3);
 				break;
 			case 3:
-				tsp_tft18_show_str(0, 1, "  ");
-				tsp_tft18_show_str(0, 2, "  ");
-				tsp_tft18_show_str(0, 3, "  ");
-				tsp_tft18_show_str(0, 4, "->");
+				tsp_show_arrow(4);
+				break;
+			case 4:
+				tsp_show_arrow(5);
+			    break;
+			case 5:
+				tsp_show_arrow(6);
+				break;
+			case 6:
+				tsp_show_arrow(7);
 				break;
 			default:
 				break;
@@ -242,7 +261,7 @@ void para_set()
 				speed -= 1;
 			}
 			break;
-		case 1:		// Kp
+		case 1:		// Kp Motor
 			if(change == 1)
 			{
 				kp_motor += 0.1;
@@ -255,7 +274,7 @@ void para_set()
 				  kp_motor -= 0.1;
 			}
 			break;
-		case 2:		// Ki
+		case 2:		// Ki Motor
 			if(change == 1)
 			{
 				if(ki_motor < 1)
@@ -268,7 +287,7 @@ void para_set()
                ki_motor = 0.0;
 			}
 			break;
-		case 3:		// Kd
+		case 3:		// Kd Motor
 			if(change == 1)
 			{
 				if(kd_motor < 15)
@@ -281,7 +300,46 @@ void para_set()
                kd_motor = 0.0;
 			}
 			break;
-		default:		// TargetV
+		case 4:		// Kp Servo
+			if(change == 1)
+			{
+				kp_servo += 0.1;
+            if(kp_servo > 9.0)
+              kp_servo = 9.0;
+			}
+			else if(change == 2)
+			{
+				if(kp_servo > 2.1 )
+				  kp_servo -= 0.1;
+			}
+			break;
+		case 5:		// Ki Servo
+			if(change == 1)
+			{
+				if(ki_servo < 1)
+				  ki_servo += 0.1;
+			}
+			else if(change == 2)
+			{
+				ki_servo -= 0.1;
+            if(ki_servo < 0.0 )
+               ki_servo = 0.0;
+			}
+			break;
+		case 6:		// Kd Servo
+			if(change == 1)
+			{
+				if(kd_servo < 15)
+				  kd_servo += 0.5;
+			}
+			else if(change == 2)
+			{
+				kd_servo -= 0.5;
+            if(kd_servo < 0.0 )
+               kd_servo = 0.0;
+			}
+			break;
+		default:		
 			break;
 		}
 		
@@ -296,8 +354,17 @@ void para_set()
 			sprintf(value_str, "%0.1f", ki_motor);
 			tsp_tft18_show_str(88, 3, value_str);
 
-			sprintf(value_str, "%2.1f", kd_motor);
+			sprintf(value_str, "%0.1f", kd_motor);
 			tsp_tft18_show_str(88, 4, value_str);
+
+			sprintf(value_str, "%0.1f", kp_servo);
+			tsp_tft18_show_str(88, 5, value_str);
+
+			sprintf(value_str, "%0.1f", ki_servo);
+			tsp_tft18_show_str(88, 6, value_str);
+
+			sprintf(value_str, "%0.1f", kd_servo);
+			tsp_tft18_show_str(88, 7, value_str);
 		}
 		// sprintf(value_str, "RES: %3d", RES_value);
 		// tsp_tft18_show_str(0, 6, value_str);
@@ -307,6 +374,9 @@ void para_set()
 			tsp_tft18_show_str(0, 2, "  ");
 			tsp_tft18_show_str(0, 3, "  ");
 			tsp_tft18_show_str(0, 4, "  ");
+			tsp_tft18_show_str(0, 5, "  ");
+			tsp_tft18_show_str(0, 6, "  ");
+			tsp_tft18_show_str(0, 7, "  ");
 			break;
          while(S0()) {}
 		}
