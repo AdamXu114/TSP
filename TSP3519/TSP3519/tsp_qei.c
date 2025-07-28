@@ -7,10 +7,13 @@ static volatile int32_t qei2_last_count = 0;
 static volatile int8_t qei1_direction = 0;
 static volatile int8_t qei2_direction = 0;
 
-extern int16_t encoder_pulse_qei1;
-extern int16_t encoder_pulse_qei2;
-extern int16_t encoder_speed_qei1;
-extern int16_t encoder_speed_qei2;
+int16_t encoder_pulse_qei1;
+int16_t encoder_pulse_qei2;
+
+int16_t encoder_speed_motor1;
+int16_t encoder_speed_motor2;
+
+
 
 #define QEI_FREQ 4096 // 假设QEI的频率为4096Hz
 #define PI 3.14159265358979323846 // 圆周率
@@ -98,9 +101,9 @@ int8_t TSP_QEI2_GetDirection(void)
 
 // 获取QEI1和QEI2的速度，单位mm/s
 int16_t tsp_qei1_get_speed(void){
-    return encoder_speed_qei1 * 1000 / QEI_FREQ * PI * 2 * R;
+    return encoder_speed_motor1 * 1000 / QEI_FREQ * PI * 2 * R;
 }
 
 int16_t tsp_qei2_get_speed(void){
-    return encoder_speed_qei2 * 1000 / QEI_FREQ * PI * 2 * R;
+    return encoder_speed_motor2 * 1000 / QEI_FREQ * PI * 2 * R;
 }

@@ -1174,6 +1174,12 @@
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_motor.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_pid.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\NUEDC2025\tsp_pid.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\NUEDC2025\tsp_servo.c</name>
         </file>
         <file>

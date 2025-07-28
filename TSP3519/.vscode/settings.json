@@ -8,7 +8,9 @@
         "stdint.h": "c",
         "tsp_adc.h": "c",
         "stdbool.h": "c",
-        "tsp_ccd.h": "c"
+        "tsp_ccd.h": "c",
+        "math.h": "c",
+        "tsp_tft18.h": "c"
     },
     "Codegeex.RepoIndex": true
 }

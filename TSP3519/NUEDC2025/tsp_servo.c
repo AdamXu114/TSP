@@ -11,15 +11,16 @@ float k_angle_to_duty = 795.0f / 90.0f; // 90度对应795个脉宽单位
 
 extern uint16_t route_x[999]; // 路径点X坐标数组
 extern uint16_t route_y[999]; // 路径点Y坐标数组
-extern uint16_t route_index = 0; // 路径点索引
+extern uint16_t route_index; // 路径点索引
 extern float kp_servo; // 舵机控制的比例系数
 extern float ki_servo; // 舵机控制的积分系数
 extern float kd_servo; // 舵机控制的微分系数
 
+uint16_t servo1_x = SERVO_CENTER_X;
+uint16_t servo2_y = SERVO_CENTER_Y;
 uint16_t last_servo_x = 1200; // 上一次舵机X坐标
 uint16_t last_servo_y = 1200; // 上一次舵机Y坐标
-static float prev_error_x = 0.0f, prev_error_y = 0.0f;
-static uint16_t integral_x = 0, integral_y = 0;
+
 extern uint16_t point_x;
 extern uint16_t point_y;// 当前激光点坐标
 
@@ -63,6 +64,9 @@ void tsp_servo_draw_circle(float radius, uint16_t steps, float distance) // radi
 
 // 闭环控制云台激光笔巡线
 void tsp_servo_line_follower(void){
+
+    static float prev_error_x = 0.0f, prev_error_y = 0.0f;
+    static uint16_t integral_x = 0, integral_y = 0;
 
     if (route_index >= 999) return; // 防止越界
     if(route_x[route_index] == '\0' && route_y[route_index] == '\0') return; // 如果当前点无效，直接返回

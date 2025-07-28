@@ -15,6 +15,8 @@ void tsp_encoder_clear(void);
 // 电机测试
 void Motor_test(void);
 
+void tsp_motor_speed_pid(uint16_t target_speed_pid, uint8_t motor);
+
 // 电机速度闭环控制
 void tsp_speed_close_loop(void);
 
@@ -31,6 +33,8 @@ void tsp_motor_stop(void);
 void tsp_motor_turn_inplace(uint8_t dir, uint16_t duty_cycle_limit, uint16_t angle);
 
 // 差速底盘巡线
-void tsp_line_follower(float err);
+void tsp_line_follower(uint16_t err);
+
+float Get_speed(uint8_t motor);
 
 #endif // TSP_MOTOR_H

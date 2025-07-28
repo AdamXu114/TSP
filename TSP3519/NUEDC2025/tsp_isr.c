@@ -11,8 +11,8 @@ extern uint8_t change;
 extern uint16_t count_20ms;
 extern int16_t encoder_pulse_qei1;
 extern int16_t encoder_pulse_qei2;
-extern int16_t encoder_speed_qei1;
-extern int16_t encoder_speed_qei2;
+extern int16_t encoder_speed_motor1;
+extern int16_t encoder_speed_motor2;
 void delay_1ms(uint32_t count)
 {
 	delay = count;
@@ -32,8 +32,8 @@ void SysTick_Handler()
 		flag_20_ms = 1;
 		encoder_pulse_qei1 = TSP_QEI1_GetCount();
 		encoder_pulse_qei2 = TSP_QEI2_GetCount();
-		encoder_speed_qei1 = encoder_pulse_qei1 - 5000;
-		encoder_speed_qei2 = encoder_pulse_qei2 - 5000;
+		encoder_speed_motor1 = encoder_pulse_qei1 - 5000;
+		encoder_speed_motor2 = encoder_pulse_qei2 - 5000;
 		DL_Timer_setCounterValueAfterEnable(QEI_1_INST, 5000);
 		DL_Timer_setCounterValueAfterEnable(QEI_2_INST, 5000);
 	}

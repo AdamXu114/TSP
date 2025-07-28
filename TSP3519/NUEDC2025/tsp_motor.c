@@ -1,16 +1,20 @@
 #include "tsp_motor.h"
 
+
+#define SPEED_SCALE  1.0f
+
 // 电机速度相关变量
 extern int16_t target_speed_qei1; // 目标速度 QEI1
 extern int16_t target_speed_qei2; // 目标速度 QEI2
 extern int16_t current_speed_qei1; // 当前速度 QEI1
 extern int16_t current_speed_qei2; // 当前速度 QEI2
-
+extern int16_t encoder_speed_motor1;
+extern int16_t encoder_speed_motor2;
 // 电机PID参数
 extern float kp_motor;
 extern float ki_motor;
 extern float kd_motor;
-#define MOTOR_DC_LIMIT	4000
+#define MOTOR_DC_LIMIT	50
 
 // 舵机与转向PID参数
 extern float kp_servo;
@@ -25,6 +29,9 @@ extern float kp_angle_to_err;
 extern float yaw;
 extern float roll;
 extern float pitch;
+
+extern uint8_t mid_idx; // 中间点索引
+extern uint8_t last_mid_idx; // 上一次中间点索引
 
 
 void tsp_encoder_init(void)
@@ -84,10 +91,10 @@ void tsp_speed_close_loop(){
     output2 += delta_out2;
 
     // 限幅
-    if (output1 > 4000) output1 = 4000;
-    if (output1 < -4000) output1 = -4000;
-    if (output2 > 4000) output2 = 4000;
-    if (output2 < -4000) output2 = -4000;
+    if (output1 > 50) output1 = 50;
+    if (output1 < -50) output1 = -50;
+    if (output2 > 50) output2 = 50;
+    if (output2 < -50) output2 = -50;
 
     tsp_motor_control((int16_t)output1, MOTOR1);
     tsp_motor_control((int16_t)output2, MOTOR2);
@@ -160,37 +167,22 @@ void tsp_motor_turn_inplace(uint8_t dir, uint16_t duty_cycle_limit, uint16_t ang
 	}
 }
 
-// // PID控制电机速度
-// void tsp_motor_speed_pid(uint16_t target_speed_pid, uint8_t motor)
-// {
-// 	static float integral = 0.0f;
-// 	static float prev_error = 0.0f;
-// 	float error = target_speed_pid - current_speed;
-// 	float output;
 
-// 	integral += error;
-// 	float derivative = error - prev_error;
 
-// 	output = kp_motor * error + ki_motor * integral + kd_motor * derivative;
-
-// 	// 限制输出范围
-// 	if (output > MOTOR_DC_LIMIT) output = MOTOR_DC_LIMIT;
-// 	if (output < 0) output = 0;
-
-// 	// 设置PWM占空比
-// 	if (motor == MOTOR1)
-// 		DL_TimerG_setCaptureCompareValue(Motor_INST, (uint16_t)output, DL_TIMER_CC_0_INDEX);
-// 	else if (motor == MOTOR2)
-// 		DL_TimerG_setCaptureCompareValue(Motor_INST, (uint16_t)output, DL_TIMER_CC_1_INDEX);
-// 	else
-// 		return; // 无效电机编号
-
-// 	prev_error = error;
-// }
-
-// 差速底盘巡线
-void tsp_line_follower(float err){
+// 差速底盘巡线，现在是纯p控制，如有需要可以改成pid控制
+void tsp_line_follower(uint16_t err){
 	target_speed_qei1 += kp_angle_to_err * err; // 根据误差调整目标速度
 	target_speed_qei2 -= kp_angle_to_err * err; // 反向调整另一个电机的速度
 	// 在主循环的其他地方应调用tsp_speed_close_loop()来执行速度闭环控制
+}
+
+float Get_speed(uint8_t motor){
+    switch(motor){
+        case MOTOR1:
+            return current_speed_qei1*SPEED_SCALE;
+        case MOTOR2:
+            return current_speed_qei2*SPEED_SCALE;
+        default:
+            return 0;
+    }
 }
