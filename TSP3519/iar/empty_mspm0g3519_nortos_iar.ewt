@@ -1554,6 +1554,12 @@
             <name>$PROJ_DIR$\..\TSP3519\tsp_adc.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\TSP3519\tsp_battery.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\TSP3519\tsp_battery.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\TSP3519\TSP_CCD.c</name>
         </file>
         <file>

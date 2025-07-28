@@ -63,6 +63,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_K230_init();
     SYSCFG_DL_LCD_init();
     SYSCFG_DL_CCD_init();
+    SYSCFG_DL_BATTERY_init();
     SYSCFG_DL_SYSTICK_init();
     /* Ensure backup structures have no valid state */
 	gServoBackup.backupRdy 	= false;
@@ -114,6 +115,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_UART_Main_reset(K230_INST);
     DL_SPI_reset(LCD_INST);
     DL_ADC12_reset(CCD_INST);
+    DL_ADC12_reset(BATTERY_INST);
 
 
     DL_GPIO_enablePower(GPIOA);
@@ -127,6 +129,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_UART_Main_enablePower(K230_INST);
     DL_SPI_enablePower(LCD_INST);
     DL_ADC12_enablePower(CCD_INST);
+    DL_ADC12_enablePower(BATTERY_INST);
 
     delay_cycles(POWER_STARTUP_DELAY);
 }
@@ -580,6 +583,25 @@ SYSCONFIG_WEAK void SYSCFG_DL_CCD_init(void)
     DL_ADC12_enableInterrupt(CCD_INST,(DL_ADC12_INTERRUPT_MEM0_RESULT_LOADED
 		 | DL_ADC12_INTERRUPT_MEM1_RESULT_LOADED));
     DL_ADC12_enableConversions(CCD_INST);
+}
+/* BATTERY Initialization */
+static const DL_ADC12_ClockConfig gBATTERYClockConfig = {
+    .clockSel       = DL_ADC12_CLOCK_SYSOSC,
+    .divideRatio    = DL_ADC12_CLOCK_DIVIDE_8,
+    .freqRange      = DL_ADC12_CLOCK_FREQ_RANGE_24_TO_32,
+};
+SYSCONFIG_WEAK void SYSCFG_DL_BATTERY_init(void)
+{
+    DL_ADC12_setClockConfig(BATTERY_INST, (DL_ADC12_ClockConfig *) &gBATTERYClockConfig);
+    DL_ADC12_configConversionMem(BATTERY_INST, BATTERY_ADCMEM_Vbat,
+        DL_ADC12_INPUT_CHAN_4, DL_ADC12_REFERENCE_VOLTAGE_VDDA_VSSA, DL_ADC12_SAMPLE_TIMER_SOURCE_SCOMP0, DL_ADC12_AVERAGING_MODE_DISABLED,
+        DL_ADC12_BURN_OUT_SOURCE_DISABLED, DL_ADC12_TRIGGER_MODE_AUTO_NEXT, DL_ADC12_WINDOWS_COMP_MODE_DISABLED);
+    DL_ADC12_setPowerDownMode(BATTERY_INST,DL_ADC12_POWER_DOWN_MODE_MANUAL);
+    DL_ADC12_setSampleTime0(BATTERY_INST,500);
+    /* Enable ADC12 interrupt */
+    DL_ADC12_clearInterruptStatus(BATTERY_INST,(DL_ADC12_INTERRUPT_MEM0_RESULT_LOADED));
+    DL_ADC12_enableInterrupt(BATTERY_INST,(DL_ADC12_INTERRUPT_MEM0_RESULT_LOADED));
+    DL_ADC12_enableConversions(BATTERY_INST);
 }
 
 SYSCONFIG_WEAK void SYSCFG_DL_SYSTICK_init(void)

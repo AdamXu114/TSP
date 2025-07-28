@@ -238,6 +238,15 @@ extern "C" {
 #define GPIO_CCD_C4_PORT                                                   GPIOB
 #define GPIO_CCD_C4_PIN                                           DL_GPIO_PIN_17
 
+/* Defines for BATTERY */
+#define BATTERY_INST                                                        ADC0
+#define BATTERY_INST_IRQHandler                                  ADC0_IRQHandler
+#define BATTERY_INST_INT_IRQN                                    (ADC0_INT_IRQn)
+#define BATTERY_ADCMEM_Vbat                                   DL_ADC12_MEM_IDX_0
+#define BATTERY_ADCMEM_Vbat_REF             DL_ADC12_REFERENCE_VOLTAGE_VDDA_VSSA
+#define GPIO_BATTERY_C4_PORT                                               GPIOB
+#define GPIO_BATTERY_C4_PIN                                       DL_GPIO_PIN_25
+
 
 
 /* Port definition for Pin Group PORTB */
@@ -324,6 +333,7 @@ void SYSCFG_DL_MPU6050_init(void);
 void SYSCFG_DL_K230_init(void);
 void SYSCFG_DL_LCD_init(void);
 void SYSCFG_DL_CCD_init(void);
+void SYSCFG_DL_BATTERY_init(void);
 
 void SYSCFG_DL_SYSTICK_init(void);
 

@@ -56,7 +56,7 @@
         <PowerConnectPC>1</PowerConnectPC>
     </SWOManager>
     <DebugChecksum>
-        <Checksum>2777842188</Checksum>
+        <Checksum>239247217</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -111,8 +111,9 @@
         <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\NUEDC2025\tsp_menu.c}.195.5" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\NUEDC2025\tsp_menu.c}.291.4" 0 0 1 "" 0 "" 0</Bp2>
         <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\NUEDC2025\tsp_menu.c}.141.4" 0 0 1 "" 0 "" 0</Bp3>
-        <Bp4>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\TSP3519.c}.168.21" 0 0 1 "" 0 "" 0</Bp4>
-        <Count>5</Count>
+        <Bp4>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\TSP3519.c}.201.13" 0 0 1 "" 0 "" 0</Bp4>
+        <Bp5>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\TSP3519.c}.179.13" 0 0 1 "" 0 "" 0</Bp5>
+        <Count>6</Count>
     </Breakpoints2>
     <DriverProfiling>
         <Enabled>0</Enabled>

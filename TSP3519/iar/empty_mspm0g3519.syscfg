@@ -11,6 +11,7 @@
  */
 const ADC12         = scripting.addModule("/ti/driverlib/ADC12", {}, false);
 const ADC121        = ADC12.addInstance();
+const ADC122        = ADC12.addInstance();
 const Board         = scripting.addModule("/ti/driverlib/Board");
 const GPIO          = scripting.addModule("/ti/driverlib/GPIO", {}, false);
 const GPIO1         = GPIO.addInstance();
@@ -90,6 +91,15 @@ ADC121.samplingOperationMode = "sequence";
 ADC121.adcPin5Config.$name   = "ti_driverlib_gpio_GPIOPinGeneric17";
 ADC121.peripheral.$assign    = "ADC1";
 ADC121.adcPin4Config.$name   = "ti_driverlib_gpio_GPIOPinGeneric18";
+
+ADC122.$name               = "BATTERY";
+ADC122.adcMem0chansel      = "DL_ADC12_INPUT_CHAN_4";
+ADC122.adcMem0_name        = "Vbat";
+ADC122.powerDownMode       = "DL_ADC12_POWER_DOWN_MODE_MANUAL";
+ADC122.sampleTime0         = "125us";
+ADC122.sampClkDiv          = "DL_ADC12_CLOCK_DIVIDE_8";
+ADC122.enabledInterrupts   = ["DL_ADC12_INTERRUPT_MEM0_RESULT_LOADED"];
+ADC122.adcPin4Config.$name = "ti_driverlib_gpio_GPIOPinGeneric19";
 
 Board.configureVDDA = true;
 
@@ -196,9 +206,7 @@ PWM2.clockDivider                       = 8;
 PWM2.clockPrescale                      = 10;
 PWM2.timerCount                         = 100;
 PWM2.PWM_CHANNEL_0.$name                = "ti_driverlib_pwm_PWMTimerCC2";
-PWM2.PWM_CHANNEL_0.ccValue              = 100;
 PWM2.PWM_CHANNEL_1.$name                = "ti_driverlib_pwm_PWMTimerCC3";
-PWM2.PWM_CHANNEL_1.ccValue              = 100;
 PWM2.ccp0PinConfig.direction            = scripting.forceWrite("OUTPUT");
 PWM2.ccp0PinConfig.hideOutputInversion  = scripting.forceWrite(false);
 PWM2.ccp0PinConfig.onlyInternalResistor = scripting.forceWrite(false);
@@ -214,9 +222,7 @@ PWM2.peripheral.ccp1Pin.$assign         = "PB4";
 PWM2.peripheral.ccp2Pin.$assign         = "PB0";
 PWM2.peripheral.ccp3Pin.$assign         = "PB2";
 PWM2.PWM_CHANNEL_2.$name                = "ti_driverlib_pwm_PWMTimerCC4";
-PWM2.PWM_CHANNEL_2.ccValue              = 100;
 PWM2.PWM_CHANNEL_3.$name                = "ti_driverlib_pwm_PWMTimerCC5";
-PWM2.PWM_CHANNEL_3.ccValue              = 100;
 PWM2.ccp2PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric9";
 PWM2.ccp3PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric10";
 
@@ -309,6 +315,8 @@ pinFunction6.peripheral.lfxInPin.$suggestSolution  = "PA3";
 pinFunction6.peripheral.lfxOutPin.$suggestSolution = "PA4";
 ADC121.peripheral.adcPin5.$suggestSolution         = "PB18";
 ADC121.peripheral.adcPin4.$suggestSolution         = "PB17";
+ADC122.peripheral.$suggestSolution                 = "ADC0";
+ADC122.peripheral.adcPin4.$suggestSolution         = "PB25";
 Board.peripheral.$suggestSolution                  = "DEBUGSS";
 Board.peripheral.swclkPin.$suggestSolution         = "PA20";
 Board.peripheral.swdioPin.$suggestSolution         = "PA19";
